@@ -1,4 +1,5 @@
 Goalkeeper
 ==========
 
-New and improved Goalkeeper! Now with MEAN stack!
+Think deeper, Goalkeeper
+New and improved Goalkeeper, now with MEAN stack!
