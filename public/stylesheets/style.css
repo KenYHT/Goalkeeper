@@ -14,6 +14,7 @@ a {
 	background-repeat: repeat;
 	height: 100%;
 	position: fixed;
+	overflow: auto;
 }
 
 .custom_form{
@@ -29,7 +30,7 @@ a {
 
 #register_form{
 	display: none;
-	
+
 .circle {
 	border-radius: 50%;
 }
