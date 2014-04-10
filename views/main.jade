@@ -5,3 +5,15 @@ block content
 	div#main-content-container
 		div#main-goals-container
 		div#main-sidebar
+			div#main-create-goal-form
+				form.form-signin(role="form")
+					h2.form-signin-heading Create a new goal
+					input.form-control(type="text", name="goal-name", placeholder="What would you like to do?", required autofocus)
+					textarea#main-goal-description.form-control(type="text", name="goal-description", placeholder="A brief description of your goal. (Optional)")
+					button.btn.btn-primary.btn-block(type="submit") Create goal
+			div#main-complete-container.main-bins
+				h3.main-bin-headers Complete
+				div#main-complete-bin.circle.main-bin-circles
+			div#main-delete-container.main-bins
+				h3.main-bin-headers Delete
+				div#main-delete-bin.circle.main-bin-circles

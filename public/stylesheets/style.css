@@ -15,3 +15,7 @@ a {
 	height: 100%;
 	position: fixed;
 }
+
+.circle {
+	border-radius: 50%;
+}
