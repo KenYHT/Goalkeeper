@@ -2,7 +2,8 @@
 
 var app = app || {};
 
-// Box
+// Box Class
+
 app.Box = (function(){
 
 	/*
@@ -39,28 +40,30 @@ app.Box = (function(){
 		el.g = g = Math.floor(Math.random()*255);
 		el.b = b = Math.floor(Math.random()*255);
 
-		el.draw = function(){
-			$(el).css({
-				'position': 'absolute',
-				'left': el.x,
-				'top': el.y,
-				'width': el.radius*2,
-				'height': el.radius*2,
-				'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
-			});
-		}
-		this.draw = el.draw;
+		this.draw = _proto.draw;
 		this.appear = _proto.appear;
 		this.grow = _proto.grow;
 		this.shrink = _proto.shrink;
 
-		console.log(el.x, el)
+		console.log("Box Maker", el)
 
 		$('body').append(el);		// change to the container
 		return this;
 	}
 
 	var _proto = init.prototype;
+
+	_proto.draw = function(){
+		var el = this.el;
+		$(el).css({
+			'position': 'absolute',
+			'left': el.x,
+			'top': el.y,
+			'width': el.radius*2,
+			'height': el.radius*2,
+			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
+		});
+	}
 
 	_proto.appear = function(){
 		var el = this.el;
@@ -91,7 +94,7 @@ app.Box = (function(){
 	}
 	_proto.shrink = function(d){
 		d = d || 20;
-		$(this.el).animte({
+		$(this.el).animate({
 			'left': '+='+(d/2),
 			'top': '+='+(d/2),
 			'width': '-='+d,
@@ -104,6 +107,50 @@ app.Box = (function(){
 	return init;
 
 })();
+
+
+
+
+// Dot Class
+
+app.Dot = function(x, y, radius){
+	var Box = app.Box;
+	var radius = parseInt(radius, 10) || 30;
+
+	var dot = Box(x, y, radius);
+	console.log(dot.el)
+	this.el = dot.el;
+	$(dot.el).css({'border-radius': '50%'});
+
+	dot.grow = Box.prototype.grow;
+	dot.shrink = Box.prototype.shrink;
+
+	return this;
+};
+app.Dot.prototype = new app.Box;
+	/*
+		Dot Constructor
+			x, y, radius
+	*/
+	// function init(x, y, radius){
+	// 	var Box = app.Box;
+	// 	var radius = parseInt(radius, 10) || 30;
+	// 	var dot = Box(x, y, radius);
+	// 	$(dot).css({'border-radius': '50%'});
+
+	// 	dot.grow = Box.prototype.grow;
+	// 	dot.shrink = Box.prototype.shrink;
+
+	// 	return dot;
+	// }
+
+// 	// Inherit from Box Class
+// 	init.prototype = new app.Box;
+
+// 	return init;
+// });
+
+
 
 
 
