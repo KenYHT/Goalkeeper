@@ -12,4 +12,6 @@ a {
 .custom_body{
 	background-image: url('/images/congruent_pentagon.png');
 	background-repeat: repeat;
+	height: 100%;
+	position: fixed;
 }

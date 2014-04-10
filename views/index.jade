@@ -1,28 +1,36 @@
 extends layout
 
 block content
-	div.carousel.slide#myCarousel
-		ol.carousel-indicators
-			li(data-target="#myCarousel", data-slide-to="0")
-			li(data-target="#myCarousel", data-slide-to="1")
-			li(data-target="#myCarousel", data-slide-to="2")
-		div.carousel-inner
-			div.item.active
-				img(src='/images/homework1.jpg')
-				div.container
-					div.carousel-caption
-						h1 Goalkeeper is an interactive way to stay on task.
-			div.item
-				img(src='/images/homework2.jpg')
-				div.container
-					div.carousel-caption
-						h1 Add, remove, and modify tasks quickly and intuitively.
-			div.item
-				img(src='/images/homework3.jpg')
-				div.container
-					div.carousel-caption
-						h1 Start goalkeeping today - sign up or log in below!
-		a.carousel-control.left(href="#myCarousel", data-slide="prev")
-			span.glyphicon.glyphicon-chevron-left
-		a.carousel-control.right(href="#myCarousel", data-slide="next")
-			span.glyphicon.glyphicon-chevron-right
+	div.custom_body
+		div.carousel.slide#myCarousel
+			ol.carousel-indicators
+				li(data-target="#myCarousel", data-slide-to="0")
+				li(data-target="#myCarousel", data-slide-to="1")
+				li(data-target="#myCarousel", data-slide-to="2")
+			div.carousel-inner
+				div.item.active
+					img(src='/images/homework1.jpg')
+					div.container
+						div.carousel-caption
+							h1 Goalkeeper is an interactive way to stay on task.
+				div.item
+					img(src='/images/homework2.jpg')
+					div.container
+						div.carousel-caption
+							h1 Add, remove, and modify tasks quickly and intuitively.
+				div.item
+					img(src='/images/homework3.jpg')
+					div.container
+						div.carousel-caption
+							h1 Start goalkeeping today - sign up or log in below!
+			a.carousel-control.left(href="#myCarousel", data-slide="prev")
+				span.glyphicon.glyphicon-chevron-left
+			a.carousel-control.right(href="#myCarousel", data-slide="next")
+				span.glyphicon.glyphicon-chevron-right
+		div.container
+			form.form-signin(role="form")
+				h2.form-signin-heading Sign in
+				input.form-control(type="email", placeholder="Email address")
+				input.form-control(type="password", placeholder="Password")
+				br
+				button.btn.btn-lg.btn-primary.btn-block Sign in
