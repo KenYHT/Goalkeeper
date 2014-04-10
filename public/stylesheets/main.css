@@ -1,0 +1,18 @@
+#main-content-container {
+	height: 100%;
+}
+
+#main-goals-container {
+	position: relative;
+	float: left;
+	background-color: #67E359;
+	width: 70%;
+	height: 100%;
+}
+
+#main-sidebar {
+	float: left;
+	background-color: #CFCFCF;
+	min-width: 30%;
+	height: 100%;
+}
