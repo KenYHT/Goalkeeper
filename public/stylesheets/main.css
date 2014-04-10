@@ -59,6 +59,17 @@
 	height: 100px;
 }
 
+#main-deadline-label {
+	height: 34px;
+	width: 48%;
+	margin-right: 6%;
+	line-height: 34px;
+}
+
+#main-goal-deadline {
+	width: 80%;
+}
+
 .main-bins {
 	position: relative;
 	float: left;
