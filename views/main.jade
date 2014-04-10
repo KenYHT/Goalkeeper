@@ -4,16 +4,21 @@ block content
 	div#main-goals-container
 	div#main-sidebar
 		div#main-navbar-container
-			ul
-				li
-					a Settings
-				li
+			ul#main-navlist
+				li.main-navlist-item
 					a(href="/") Log Out
+				li.main-navlist-item
+					a Settings
 		div#main-create-goal-form
 			form.form-signin(role="form")
 				h2.form-signin-heading Create a new goal
-				input.form-control(type="text", name="goal-name", placeholder="What would you like to do?", required autofocus)
+				input.form-control(type="text", name="goal-name", placeholder="What would you like to do?", required)
 				textarea#main-goal-description.form-control(type="text", name="goal-description", placeholder="A brief description of your goal. (Optional)")
+				dl.dl-horizontal
+					dt#main-deadline-label
+						label(for="goal-deadline") When do you need it done?
+					dd
+						input#main-goal-deadline.form-control(name="goal-deadline")
 				button.btn.btn-primary.btn-block(type="submit") Create goal
 		div#main-complete-container.main-bins
 			h3.main-bin-headers Complete
@@ -21,4 +26,5 @@ block content
 		div#main-delete-container.main-bins
 			h3.main-bin-headers Delete
 			div#main-delete-bin.circle.main-bin-circles
-	script(src='/javascripts/goals.js', type='text/javascript')
+	script(type='text/javascript', src='/javascripts/goals.js')
+	script(type='text/javascript', src='/javascripts/mainPage.js')
