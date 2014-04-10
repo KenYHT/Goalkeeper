@@ -10,7 +10,7 @@ var UI = UI || {
 // Click Testing
 
 $('body').click(function(e){
-	if (!dragging){
+	if (!UI.dragging){
 		var d = new UI.Dot(e.pageX-40, e.pageY-40, UI.dotRadius);
 		d.appear();
 		d.el.className = "main-goal-bubble";
@@ -22,7 +22,9 @@ $('body').click(function(e){
 
 // Drag Testing
 
-$('.goal')
+$('.goal').on('drag', function(e){
+	console.log(e)
+});
 
 
 
