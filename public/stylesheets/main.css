@@ -5,6 +5,20 @@
 	background-color: #67E359;
 }
 
+#main-navlist {
+	list-style: none;
+}
+
+.main-navlist-item {
+	float: left;
+	padding: 10px;
+	font-size: 17px;
+}
+
+.main-navlist-item>a:hover {
+	text-decoration: none;
+}
+
 #main-goals-container {
 	position: relative;
 	float: left;
