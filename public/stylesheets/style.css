@@ -16,6 +16,20 @@ a {
 	position: fixed;
 }
 
+.custom_form{
+	width:40%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.registerButton_custom{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#register_form{
+	display: none;
+	
 .circle {
 	border-radius: 50%;
 }
