@@ -1,10 +1,55 @@
 
 
-var app = app || {};
+var UI = UI || {
+	newGoal : true,
+	currGoal : null,
+	dotRadius : 80,
+	dragging : false,
+};
+
+// Click Testing
+
+$('body').click(function(e){
+	if (!dragging){
+		var d = new UI.Dot(e.pageX-40, e.pageY-40, UI.dotRadius);
+		d.appear();
+		d.el.className = "main-goal-bubble";
+		d.el.style.lineHeight = UI.dotRadius+'px';
+		d.el.contentEditable = "true";
+		d.el.focus();
+	}
+});
+
+// Drag Testing
+
+$('.goal')
+
+
+
+// Type Testing
+
+// $('body').keyup(function(e){
+// 	console.log(e)
+
+// 	if (newGoal){
+// 		var d = new UI.Dot(Math.floor(Math.random()*window.innerWidth-UI.dotRadius),
+// 			Math.floor(Math.random()*window.innerHeight-radius));
+// 		d.appear();
+// 	} else if (currGoal !== null){
+
+// 	}
+
+// });
+
+
+/*
+ *	Object Classes
+ *		Box, Dot
+ */
 
 // Box Class
 
-app.Box = (function(){
+UI.Box = (function(){
 
 	/*
 		Box Constructor
@@ -18,6 +63,7 @@ app.Box = (function(){
 		var r, g, b;
 
 		var el = this.el = document.createElement('div');
+		this.el.className = 'goal';
 		var radius = el.radius = arguments[2] || 70;
 
 		if (arguments.length === 3){
@@ -36,9 +82,9 @@ app.Box = (function(){
 		y = el.y = y || Math.floor(Math.random()*window.innerHeight-radius);
 
 		// initialize random color
-		el.r = r = Math.floor(Math.random()*255);
-		el.g = g = Math.floor(Math.random()*255);
-		el.b = b = Math.floor(Math.random()*255);
+		el.r = r = Math.floor(Math.random()*155)+100;
+		el.g = g = Math.floor(Math.random()*155)+100;
+		el.b = b = Math.floor(Math.random()*155)+100;
 
 		this.draw = _proto.draw;
 		this.appear = _proto.appear;
@@ -113,43 +159,24 @@ app.Box = (function(){
 
 // Dot Class
 
-app.Dot = function(x, y, radius){
-	var Box = app.Box;
+/*
+	Dot Constructor
+		x, y, radius
+*/
+UI.Dot = function(x, y, radius){
 	var radius = parseInt(radius, 10) || 30;
 
-	var dot = Box(x, y, radius);
-	console.log(dot.el)
+	var dot = UI.Box(x, y, radius);
 	this.el = dot.el;
-	$(dot.el).css({'border-radius': '50%'});
+	$(this.el).css({'border-radius': '50%'});
 
-	dot.grow = Box.prototype.grow;
-	dot.shrink = Box.prototype.shrink;
+	// dot.grow = Box.prototype.grow;
+	// dot.shrink = Box.prototype.shrink;
 
 	return this;
 };
-app.Dot.prototype = new app.Box;
-	/*
-		Dot Constructor
-			x, y, radius
-	*/
-	// function init(x, y, radius){
-	// 	var Box = app.Box;
-	// 	var radius = parseInt(radius, 10) || 30;
-	// 	var dot = Box(x, y, radius);
-	// 	$(dot).css({'border-radius': '50%'});
-
-	// 	dot.grow = Box.prototype.grow;
-	// 	dot.shrink = Box.prototype.shrink;
-
-	// 	return dot;
-	// }
-
-// 	// Inherit from Box Class
-// 	init.prototype = new app.Box;
-
-// 	return init;
-// });
-
+UI.Dot.prototype = new UI.Box;
+	
 
 
 
