@@ -1,3 +1,10 @@
+#main-jumbotron {
+	position: absolute;
+	width: 100%;
+	height: 50px;
+	background-color: #67E359;
+}
+
 #main-content-container {
 	height: 100%;
 }
@@ -5,7 +12,8 @@
 #main-goals-container {
 	position: relative;
 	float: left;
-	background-color: #67E359;
+	background-color: #9DED93;
+	min-width: 70%;
 	width: 70%;
 	height: 100%;
 }
@@ -14,5 +22,40 @@
 	float: left;
 	background-color: #CFCFCF;
 	min-width: 30%;
+	width: 30%;
 	height: 100%;
+}
+
+#main-create-goal-form {
+	margin-top: 30px;
+	padding: 20px;
+}
+
+#main-goal-description {
+	position: relative;
+	height: 100px;
+}
+
+#main-complete-bin {
+	background-color: #2BCF25;
+}
+
+#main-delete-bin {
+	background-color: #2C5AF2;
+}
+
+.main-bin-circles {
+	width: 70%;
+	height: 60%;
+	margin: 0 auto;
+}
+
+.main-bins {
+	float: left;
+	height: 40%;
+	width: 50%;
+}
+
+.main-bin-headers {
+	text-align: center;
 }
