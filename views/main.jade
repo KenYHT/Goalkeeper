@@ -20,6 +20,8 @@ block content
 			h4.main-bin-headers Delete
 			div#main-delete-bin.circle.main-bin-circles
 		div#main-navbar-container
+			div#main-nav-toggle-container
+				span#main-nav-toggle.glyphicon.glyphicon-chevron-left.glyph-bigger
 			ul#main-navlist
 				li.main-navlist-item
 					a(href="/") Log Out
@@ -27,7 +29,7 @@ block content
 					a Settings
 		div#main-add-goal-container
 			button.btn.btn-default
-				span.glyphicon.glyphicon-plus
+				span.glyphicon.glyphicon-plus#main-add-goal Create
 		
 	script(type='text/javascript', src='/javascripts/goals.js')
 	script(type='text/javascript', src='/javascripts/mainPage.js')

@@ -4,7 +4,7 @@ var UI = UI || {
 	newGoal : true,
 	currGoal : null,
 	dotRadius : 80,
-	dragging : false,
+	dragging : true,
 };
 
 // Click Testing

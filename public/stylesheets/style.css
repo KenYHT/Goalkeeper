@@ -18,7 +18,7 @@ a {
 }
 
 .custom_form{
-	width:40%;
+	width: 40%;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -33,4 +33,8 @@ a {
 
 .circle {
 	border-radius: 50%;
+}
+
+.glyph-bigger {
+	font-size: 20px;
 }
