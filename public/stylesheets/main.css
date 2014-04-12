@@ -1,10 +1,12 @@
 #main-navbar-container {
-	display: table;
+	display: none;
 	position: absolute;
 	width: 30%;
 	height: 50px;
 	background-color: #67E359;
 	z-index: 1;
+	bottom: 0;
+	right: 0;
 }
 
 #main-navlist {
@@ -33,11 +35,10 @@
 #main-goals-container {
 	position: relative;
 	float: left;
-	background-color: #9DED93;
-	min-width: 70%;
-	width: 70%;
+	background-color: #C3C4C0;
+	width: 100%;
 	height: 100%;
-	border-right: 1px solid #A8A8A8;
+	/*border-right: 1px solid #A8A8A8;*/
 }
 
 #main-sidebar {
@@ -50,6 +51,7 @@
 }
 
 #main-create-goal-form {
+	display: none;
 	margin-top: 30px;
 	padding: 20px;
 }
@@ -71,10 +73,19 @@
 }
 
 .main-bins {
-	position: relative;
-	float: left;
-	height: 40%;
-	width: 50%;
+	position: absolute;
+	/*float: left;*/
+	/*padding: 30px;*/
+	height: 180px;
+	width: 150px;
+}
+
+#main-complete-container {
+
+}
+
+#main-delete-container {
+	right: 0;
 }
 
 #main-complete-bin {
@@ -83,16 +94,18 @@
 
 #main-delete-bin {
 	background-color: #2C5AF2;
+
 }
 
 .main-bin-circles {
-	width: 158px;
-	height: 158px;
+	width: 50px;
+	height: 50px;
 	margin: 0 auto;
 }
 
 .main-bin-headers {
 	text-align: center;
+	margin-bottom: 30px;
 }
 
 
@@ -102,3 +115,8 @@
 	font-size: 20px;
 }
 
+#main-add-goal-container {
+	position: absolute;
+	margin: 20px;
+	bottom: 0;
+}

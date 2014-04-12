@@ -2,13 +2,6 @@ extends layout
 
 block content
 	div#main-goals-container
-	div#main-sidebar
-		div#main-navbar-container
-			ul#main-navlist
-				li.main-navlist-item
-					a(href="/") Log Out
-				li.main-navlist-item
-					a Settings
 		div#main-create-goal-form
 			form.form-signin(role="form")
 				h2.form-signin-heading Create a new goal
@@ -21,10 +14,20 @@ block content
 						input#main-goal-deadline.form-control(name="goal-deadline")
 				button.btn.btn-primary.btn-block(type="submit") Create goal
 		div#main-complete-container.main-bins
-			h3.main-bin-headers Complete
+			h4.main-bin-headers Complete
 			div#main-complete-bin.circle.main-bin-circles
 		div#main-delete-container.main-bins
-			h3.main-bin-headers Delete
+			h4.main-bin-headers Delete
 			div#main-delete-bin.circle.main-bin-circles
+		div#main-navbar-container
+			ul#main-navlist
+				li.main-navlist-item
+					a(href="/") Log Out
+				li.main-navlist-item
+					a Settings
+		div#main-add-goal-container
+			button.btn.btn-default
+				span.glyphicon.glyphicon-plus
+		
 	script(type='text/javascript', src='/javascripts/goals.js')
 	script(type='text/javascript', src='/javascripts/mainPage.js')
