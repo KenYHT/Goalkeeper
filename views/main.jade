@@ -19,17 +19,23 @@ block content
 		div#main-delete-container.main-bins
 			h4.main-bin-headers Delete
 			div#main-delete-bin.circle.main-bin-circles
-		div#main-navbar-container
+		div#main-nav-container.main-toolbar-container.lightGreen
 			div#main-nav-toggle-container
 				span#main-nav-toggle.glyphicon.glyphicon-chevron-left.glyph-bigger
-			ul#main-navlist
-				li.main-navlist-item
-					a(href="/") Log Out
-				li.main-navlist-item
-					a Settings
+			ul.main-list
+				li.main-list-item
+					a(href="/").main-nav-item Log Out
+				li.main-list-item
+					a.main-nav-item Settings
 		div#main-add-goal-container
 			button.btn.btn-default
-				span.glyphicon.glyphicon-plus#main-add-goal Create
+				span.glyphicon.glyphicon-plus.bold Create
+		div#main-sort-container.main-toolbar-container.white Sort By
+			ul.main-list
+				li.main-list-item
+					a.main-nav-item.main-sort-item Time Remaining
+				li.main-list-item
+					a.main-nav-item.main-sort-item Priority
 		
 	script(type='text/javascript', src='/javascripts/goals.js')
 	script(type='text/javascript', src='/javascripts/mainPage.js')

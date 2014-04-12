@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$("#main-nav-toggle-container").click(function() {
 		if (navToggle === false) {
 			navToggle = true;
-			$("#main-navbar-container").animate({
+			$(".main-toolbar-container").animate({
 				right: 0
 			}, 200, function() {
 				$("#main-nav-toggle").removeClass("glyphicon-chevron-left");
@@ -13,7 +13,7 @@ $(document).ready(function() {
 			});
 		} else {
 			navToggle = false;
-			$("#main-navbar-container").animate({
+			$(".main-toolbar-container").animate({
 				right: "-220px"
 			}, 200, function() {
 				$("#main-nav-toggle").removeClass("glyphicon-chevron-right");
@@ -21,5 +21,4 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
 });

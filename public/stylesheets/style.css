@@ -9,6 +9,14 @@ a {
 	color: #00B7FF;
 }
 
+.white {
+	background-color: #FFF;
+}
+
+.lightGreen {
+	background-color: #67E359;
+}
+
 .custom_body{
 	background-image: url('/images/congruent_pentagon.png');
 	background-repeat: repeat;
@@ -37,4 +45,8 @@ a {
 
 .glyph-bigger {
 	font-size: 20px;
+}
+
+.bold {
+	font-weight: bold;
 }
