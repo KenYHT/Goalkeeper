@@ -1,8 +1,13 @@
-#main-goals-container {
+#main-container {
 	overflow: hidden;
 	position: relative;
 	float: left;
 	background-color: #C3C4C0;
+	width: 100%;
+	height: 100%;
+}
+
+#main-goals-container{
 	width: 100%;
 	height: 100%;
 }

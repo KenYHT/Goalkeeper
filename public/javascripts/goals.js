@@ -2,28 +2,58 @@
 
 var UI = UI || {
 	newGoal : true,
-	currGoal : null,
+	currGoal : null,		// when editing
+	selectedGoal : null,	// when dragging
 	dotRadius : 80,
-	dragging : true,
+	dragging : false,
+	lastPageX : null,
+	lastPageY : null,
+	goals: [],
 };
 
 // Click Testing
 
-$('body').click(function(e){
+$('#main-create-button').click(function(e){
 	if (!UI.dragging){
-		var d = new UI.Dot(e.pageX-40, e.pageY-40, UI.dotRadius);
+		var d = new UI.Dot(150, 50, UI.dotRadius);
+		$('#main-goals-container').append(d.el);
 		d.appear();
 		d.el.className = "main-goal-bubble";
 		d.el.style.lineHeight = UI.dotRadius+'px';
 		d.el.contentEditable = "true";
 		d.el.focus();
+
+		UI.goals.push(d);
 	}
 });
 
 // Drag Testing
 
-$('.goal').on('drag', function(e){
-	console.log(e)
+$('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
+	var el = $(this)[0];
+	if (!el){
+		return;
+	}
+	UI.selectedGoal = el;
+
+	el.dragging = true;
+	console.log("now i'm dragging", el)
+}).on('mouseup', '.main-goal-bubble', function () {
+	var el = $(this)[0];
+	if (!el){
+		return;
+	}
+
+	el.dragging = false;
+	UI.selectedGoal = null;
+	console.log("uh done drag")
+}).mousemove(function(e){
+	var el = UI.selectedGoal;
+	if (UI.selectedGoal){
+		if (el.dragging){
+			el.master.moveTo(e.pageX, e.pageY);
+		}
+	}
 });
 
 
@@ -63,9 +93,13 @@ UI.Box = (function(){
 	function init(x, y){
 		var x, y, width, height;
 		var r, g, b;
+		var dx, dy;
 
 		var el = this.el = document.createElement('div');
 		this.el.className = 'goal';
+		
+		el.master = this;		// retain reference to master object
+		
 		var radius = el.radius = arguments[2] || 70;
 
 		if (arguments.length === 3){
@@ -79,7 +113,11 @@ UI.Box = (function(){
 			el.height = height = 60;
 		}
 
+		// attach velocities to element
+		el.dx = 0;
+		el.dy = 0;
 
+		// attach position to element
 		x = el.x = x || Math.floor(Math.random()*window.innerWidth-radius);
 		y = el.y = y || Math.floor(Math.random()*window.innerHeight-radius);
 
@@ -92,14 +130,21 @@ UI.Box = (function(){
 		this.appear = _proto.appear;
 		this.grow = _proto.grow;
 		this.shrink = _proto.shrink;
+		this.moveTo = _proto.moveTo;
 
-		console.log("Box Maker", el)
-
-		$('body').append(el);		// change to the container
 		return this;
 	}
 
 	var _proto = init.prototype;
+
+	_proto.moveTo = function (x, y) {
+		var el = this.el;
+		$(el).css({
+			'left': x - el.radius,
+			'top': y - el.radius,
+		});
+		return this;
+	}
 
 	_proto.draw = function(){
 		var el = this.el;
@@ -111,6 +156,7 @@ UI.Box = (function(){
 			'height': el.radius*2,
 			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
 		});
+		return this;
 	}
 
 	_proto.appear = function(){
@@ -128,6 +174,7 @@ UI.Box = (function(){
 			'width': el.width*2,
 			'height': el.height*2,
 		});
+		return this;
 	}
 
 	_proto.grow = function(d){
@@ -139,6 +186,7 @@ UI.Box = (function(){
 			'height': '+='+d,
 		});
 		this.el.radius += d;
+		return this;
 	}
 	_proto.shrink = function(d){
 		d = d || 20;
@@ -149,6 +197,7 @@ UI.Box = (function(){
 			'height': '-='+d,
 		});
 		this.el.radius -= d;
+		return this;
 	}
 
 	// Makes Box the constructor
@@ -170,6 +219,7 @@ UI.Dot = function(x, y, radius){
 
 	var dot = UI.Box(x, y, radius);
 	this.el = dot.el;
+	this.el.master = this;
 	$(this.el).css({'border-radius': '50%'});
 
 	// dot.grow = Box.prototype.grow;
