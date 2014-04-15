@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	div#main-goals-container
+	div#main-container
 		div#main-create-goal-form
 			form.form-signin(role="form")
 				h2.form-signin-heading Create a new goal
@@ -28,7 +28,7 @@ block content
 				li.main-list-item
 					a.main-nav-item Settings
 		div#main-add-goal-container
-			button.btn.btn-default
+			button.btn.btn-default#main-create-button
 				span.glyphicon.glyphicon-plus.bold Create
 		div#main-sort-container.main-toolbar-container.white Sort By
 			ul.main-list
@@ -36,6 +36,7 @@ block content
 					a.main-nav-item.main-sort-item Time Remaining
 				li.main-list-item
 					a.main-nav-item.main-sort-item Priority
+		div#main-goals-container
 		
 	script(type='text/javascript', src='/javascripts/goals.js')
 	script(type='text/javascript', src='/javascripts/mainPage.js')

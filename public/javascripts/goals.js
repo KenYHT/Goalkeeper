@@ -1,27 +1,80 @@
 var UI = UI || {
 	newGoal : true,
-	currGoal : null,
+	currGoal : null,		// when editing
+	selectedGoal : null,	// when dragging
 	dotRadius : 80,
-	dragging : true,
+	dragging : false,
+	lastPageX : null,
+	lastPageY : null,
+	dx : 0,
+	dy : 0,
+	vScale : 5,			// amplify velocity
+	lastUpdate : -1,		// time
+	goals: [],
 };
 
 // Click Testing
 
-$('body').click(function(e){
+$('#main-create-button').click(function(e){
 	if (!UI.dragging){
-		var d = new UI.Dot(e.pageX-40, e.pageY-40, UI.dotRadius);
+		var d = new UI.Dot(150, 50, UI.dotRadius);
+		$('#main-goals-container').append(d.el);
 		d.appear();
 		d.el.className = "main-goal-bubble";
 		d.el.style.lineHeight = UI.dotRadius+'px';
 		d.el.contentEditable = "true";
 		d.el.focus();
+
+		UI.goals.push(d);
 	}
 });
 
 // Drag Testing
 
-$('.goal').on('drag', function(e){
-	console.log(e)
+$('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
+	var el = $(this)[0];
+	if (!el){
+		return;
+	}
+	UI.selectedGoal = el;
+
+	el.dragging = true;
+	console.log("now i'm dragging")
+}).on('mouseup', '.main-goal-bubble', function (e) {
+	var el = $(this)[0];
+	if (!el){
+		return;
+	}
+
+	el.dragging = false;
+	UI.selectedGoal = null;
+	console.log("uh done drag")
+
+	// glide
+	if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
+		el.dx = UI.dx * UI.vScale;
+		el.dy = UI.dy * UI.vScale;
+		el.master.glide();
+	}
+
+}).mousemove(function(e){
+	var el = UI.selectedGoal;
+	if (UI.selectedGoal){
+		if (el.dragging){
+			var newX = e.pageX;
+			var newY = e.pageY;
+
+			var now = Date.now();
+			UI.dx = (e.pageX - UI.lastPageX) / (now - UI.lastUpdate);
+			UI.dy = (e.pageY - UI.lastPageY) / (now - UI.lastUpdate);
+			el.master.moveTo(newX, newY);
+
+			UI.lastUpdate = Date.now();
+			UI.lastPageX = newX;
+			UI.lastPageY = newY;
+
+		}
+	}
 });
 
 
@@ -61,9 +114,13 @@ UI.Box = (function(){
 	function init(x, y){
 		var x, y, width, height;
 		var r, g, b;
+		var dx, dy;
 
 		var el = this.el = document.createElement('div');
 		this.el.className = 'goal';
+		
+		el.master = this;		// retain reference to master object
+		
 		var radius = el.radius = arguments[2] || 70;
 
 		if (arguments.length === 3){
@@ -77,7 +134,11 @@ UI.Box = (function(){
 			el.height = height = 60;
 		}
 
+		// attach velocities to element
+		el.dx = 0;
+		el.dy = 0;
 
+		// attach position to element
 		x = el.x = x || Math.floor(Math.random()*window.innerWidth-radius);
 		y = el.y = y || Math.floor(Math.random()*window.innerHeight-radius);
 
@@ -86,18 +147,41 @@ UI.Box = (function(){
 		el.g = g = Math.floor(Math.random()*155)+100;
 		el.b = b = Math.floor(Math.random()*155)+100;
 
-		this.draw = _proto.draw;
-		this.appear = _proto.appear;
-		this.grow = _proto.grow;
-		this.shrink = _proto.shrink;
 
-		console.log("Box Maker", el)
-
-		$('body').append(el);		// change to the container
 		return this;
 	}
 
 	var _proto = init.prototype;
+
+	_proto.glide = function(){
+		var el = this.el;
+		this.moveTo(el.x + el.dx, el.y + el.dy);
+		console.log(el.dx, el.dy)
+
+		// update & check
+		el.dx *= 0.95;
+		el.dy *= 0.95;
+
+		if (Math.abs(el.dx) > 0.02 || Math.abs(el.dy) > 0.02){
+			requestAnimationFrame(this.glide.bind(this));
+		}
+	}
+
+	_proto.moveTo = function (x, y) {
+		var el = this.el;
+		x = (x > window.innerWidth) ? 0 : (x < 0) ? window.innerWidth : x;
+		y = (y > window.innerHeight) ? 0 : (y < 0) ? window.innerHeight : y;
+
+		// update internals
+		el.x = x;
+		el.y = y;
+
+		$(el).css({
+			'left': el.x - el.radius,
+			'top': el.y - el.radius,
+		});
+		return this;
+	}
 
 	_proto.draw = function(){
 		var el = this.el;
@@ -109,6 +193,7 @@ UI.Box = (function(){
 			'height': el.radius*2,
 			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
 		});
+		return this;
 	}
 
 	_proto.appear = function(){
@@ -126,6 +211,7 @@ UI.Box = (function(){
 			'width': el.width*2,
 			'height': el.height*2,
 		});
+		return this;
 	}
 
 	_proto.grow = function(d){
@@ -137,6 +223,7 @@ UI.Box = (function(){
 			'height': '+='+d,
 		});
 		this.el.radius += d;
+		return this;
 	}
 	_proto.shrink = function(d){
 		d = d || 20;
@@ -147,6 +234,7 @@ UI.Box = (function(){
 			'height': '-='+d,
 		});
 		this.el.radius -= d;
+		return this;
 	}
 
 	// Makes Box the constructor
@@ -168,6 +256,7 @@ UI.Dot = function(x, y, radius){
 
 	var dot = UI.Box(x, y, radius);
 	this.el = dot.el;
+	this.el.master = this;
 	$(this.el).css({'border-radius': '50%'});
 
 	// dot.grow = Box.prototype.grow;
