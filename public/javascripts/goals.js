@@ -4,14 +4,14 @@ var UI = UI || {
 	newGoal : true,
 	currGoal : null,		// when editing
 	selectedGoal : null,	// when dragging
-	dotRadius : 80,
+	dotRadius : 80,			// default dot size
 	dragging : false,
 	lastPageX : null,
 	lastPageY : null,
 	dx : 0,
 	dy : 0,
-	vScale : 5,			// amplify velocity
-	lastUpdate : -1,		// time
+	vScale : 5,				// amplify velocity
+	lastUpdate : -1,		// used to calculate time
 	goals: [],
 };
 
