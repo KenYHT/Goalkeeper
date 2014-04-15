@@ -8,6 +8,10 @@ var UI = UI || {
 	dragging : false,
 	lastPageX : null,
 	lastPageY : null,
+	dx : 0,
+	dy : 0,
+	vScale : 5,			// amplify velocity
+	lastUpdate : -1,		// time
 	goals: [],
 };
 
@@ -37,8 +41,8 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	UI.selectedGoal = el;
 
 	el.dragging = true;
-	console.log("now i'm dragging", el)
-}).on('mouseup', '.main-goal-bubble', function () {
+	console.log("now i'm dragging")
+}).on('mouseup', '.main-goal-bubble', function (e) {
 	var el = $(this)[0];
 	if (!el){
 		return;
@@ -47,11 +51,30 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	el.dragging = false;
 	UI.selectedGoal = null;
 	console.log("uh done drag")
+
+	// glide
+	if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
+		el.dx = UI.dx * UI.vScale;
+		el.dy = UI.dy * UI.vScale;
+		el.master.glide();
+	}
+
 }).mousemove(function(e){
 	var el = UI.selectedGoal;
 	if (UI.selectedGoal){
 		if (el.dragging){
-			el.master.moveTo(e.pageX, e.pageY);
+			var newX = e.pageX;
+			var newY = e.pageY;
+
+			var now = Date.now();
+			UI.dx = (e.pageX - UI.lastPageX) / (now - UI.lastUpdate);
+			UI.dy = (e.pageY - UI.lastPageY) / (now - UI.lastUpdate);
+			el.master.moveTo(newX, newY);
+
+			UI.lastUpdate = Date.now();
+			UI.lastPageX = newX;
+			UI.lastPageY = newY;
+
 		}
 	}
 });
@@ -126,22 +149,38 @@ UI.Box = (function(){
 		el.g = g = Math.floor(Math.random()*155)+100;
 		el.b = b = Math.floor(Math.random()*155)+100;
 
-		this.draw = _proto.draw;
-		this.appear = _proto.appear;
-		this.grow = _proto.grow;
-		this.shrink = _proto.shrink;
-		this.moveTo = _proto.moveTo;
 
 		return this;
 	}
 
 	var _proto = init.prototype;
 
+	_proto.glide = function(){
+		var el = this.el;
+		this.moveTo(el.x + el.dx, el.y + el.dy);
+		console.log(el.dx, el.dy)
+
+		// update & check
+		el.dx *= 0.95;
+		el.dy *= 0.95;
+
+		if (Math.abs(el.dx) > 0.02 || Math.abs(el.dy) > 0.02){
+			requestAnimationFrame(this.glide.bind(this));
+		}
+	}
+
 	_proto.moveTo = function (x, y) {
 		var el = this.el;
+		x = (x > window.innerWidth) ? 0 : (x < 0) ? window.innerWidth : x;
+		y = (y > window.innerHeight) ? 0 : (y < 0) ? window.innerHeight : y;
+
+		// update internals
+		el.x = x;
+		el.y = y;
+
 		$(el).css({
-			'left': x - el.radius,
-			'top': y - el.radius,
+			'left': el.x - el.radius,
+			'top': el.y - el.radius,
 		});
 		return this;
 	}
