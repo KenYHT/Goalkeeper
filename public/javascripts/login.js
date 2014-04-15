@@ -6,6 +6,7 @@ $(".registerButton").click(function(){
 });
 
 $(".signInButton").click(function(e){
-	e.preventDefault();
-	window.location = '/main';
+	
+/*	e.preventDefault();
+	window.location = '/main';*/
 });
