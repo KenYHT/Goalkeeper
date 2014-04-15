@@ -8,7 +8,7 @@ var UI = UI || {
 	lastPageY : null,
 	dx : 0,
 	dy : 0,
-	vScale : 5,				// amplify velocity
+	vScale : 5,				// amplify velocity, 0-no momentum
 	lastUpdate : -1,		// used to calculate time
 	goals: [],
 };
@@ -16,20 +16,43 @@ var UI = UI || {
 // Click Testing
 
 $('#main-create-button').click(function(e){
-	console.log(1)
 	if (!UI.dragging){
-		console.log(2)
 		var d = new UI.Dot(150, 50, UI.dotRadius);
-		$('#main-goals-container').append(d.el);
 		d.appear();
 		d.el.className = "main-goal-bubble";
 		d.el.style.lineHeight = UI.dotRadius+'px';
 		d.el.contentEditable = "true";
-		d.el.focus();
 
+		var edit = document.createElement('a');
+		edit.href = '#';
+		edit.className = 'goal-edit';
+		edit.textContent = 'edit';
+		d.el.appendChild(edit);
+
+		$('#main-goals-container').append(d.el);
+		d.el.focus();
 		UI.goals.push(d);
 	}
 });
+
+
+// Edit Goal Button
+
+$('#main-goals-container').on('click', '.goal-edit', function (e) {
+	$(this).parent()[0].master.grow(window.innerWidth*2);
+	$('#main-create-goal-form').fadeIn();
+
+	UI.currGoal = $(this).parent()[0];
+});
+
+// Close Edit Form
+
+$('#main-close-form').click(function(){
+	UI.currGoal.master.shrink(window.innerWidth*2);
+	$('#main-create-goal-form').fadeOut();
+});
+
+
 
 // Drag Testing
 
@@ -58,6 +81,22 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		el.dy = UI.dy * UI.vScale;
 		el.master.glide();
 	}
+
+}).mouseleave(function (e) {
+	if (UI.selectedGoal){
+		var el = UI.selectedGoal;
+		el.dragging = false;
+
+		// glide
+		if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
+			el.dx = UI.dx * UI.vScale;
+			el.dy = UI.dy * UI.vScale;
+			el.master.glide();
+		}
+	}
+	UI.selectedGoal = null;
+	console.log("dragged off mayne")
+
 
 }).mousemove(function(e){
 	var el = UI.selectedGoal;
@@ -158,7 +197,6 @@ UI.Box = (function(){
 	_proto.glide = function(){
 		var el = this.el;
 		this.moveTo(el.x + el.dx, el.y + el.dy);
-		console.log(el.dx, el.dy)
 
 		// update & check
 		el.dx *= 0.95;
@@ -260,9 +298,6 @@ UI.Dot = function(x, y, radius){
 	this.el = dot.el;
 	this.el.master = this;
 	$(this.el).css({'border-radius': '50%'});
-
-	// dot.grow = Box.prototype.grow;
-	// dot.shrink = Box.prototype.shrink;
 
 	return this;
 };
