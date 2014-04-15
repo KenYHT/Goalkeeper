@@ -21,6 +21,7 @@ a {
 	background-image: url('/images/congruent_pentagon.png');
 	background-repeat: repeat;
 	height: 100%;
+	width: 100%;
 	position: fixed;
 	overflow: auto;
 }
