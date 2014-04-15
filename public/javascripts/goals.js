@@ -16,7 +16,9 @@ var UI = UI || {
 // Click Testing
 
 $('#main-create-button').click(function(e){
+	console.log(1)
 	if (!UI.dragging){
+		console.log(2)
 		var d = new UI.Dot(150, 50, UI.dotRadius);
 		$('#main-goals-container').append(d.el);
 		d.appear();
