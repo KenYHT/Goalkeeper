@@ -1,5 +1,5 @@
-#main-goals-container {
-	overflow: hidden;
+#main-container {
+	overflow: none;
 	position: relative;
 	float: left;
 	background-color: #C3C4C0;
