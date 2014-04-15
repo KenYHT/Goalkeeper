@@ -1,5 +1,3 @@
-
-
 var UI = UI || {
 	newGoal : true,
 	currGoal : null,		// when editing
