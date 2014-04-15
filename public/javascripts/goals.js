@@ -2,21 +2,23 @@ var UI = UI || {
 	newGoal : true,
 	currGoal : null,		// when editing
 	selectedGoal : null,	// when dragging
-	dotRadius : 80,
+	dotRadius : 80,			// default dot size
 	dragging : false,
 	lastPageX : null,
 	lastPageY : null,
 	dx : 0,
 	dy : 0,
-	vScale : 5,			// amplify velocity
-	lastUpdate : -1,		// time
+	vScale : 5,				// amplify velocity
+	lastUpdate : -1,		// used to calculate time
 	goals: [],
 };
 
 // Click Testing
 
 $('#main-create-button').click(function(e){
+	console.log(1)
 	if (!UI.dragging){
+		console.log(2)
 		var d = new UI.Dot(150, 50, UI.dotRadius);
 		$('#main-goals-container').append(d.el);
 		d.appear();

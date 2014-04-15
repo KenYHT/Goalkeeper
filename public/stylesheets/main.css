@@ -1,5 +1,5 @@
 #main-container {
-	overflow: none;
+	overflow: hidden;
 	position: relative;
 	float: left;
 	background-color: #C3C4C0;
