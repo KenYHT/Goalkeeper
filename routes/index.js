@@ -1,4 +1,3 @@
-
 /*
  * GET home page.
  */
@@ -12,12 +11,15 @@ var User = mongoose.model( 'User' );
 
 exports.create = function ( req, res ){
 	console.log(req.body);
-  var user = new User({
-  	username : req.body.username,
-  	password : req.body.password
-  });
+  	var user = new User({
+  		email : req.body.email,
+		password : req.body.password
+	});
 
-  user.save( function( err ){
-    res.redirect(req.originalUrl);
-  });
+  	user.save( function( err ){
+  		if (err) {
+  			console.log(err);
+  		}
+		res.redirect('/main');
+	});
 };
