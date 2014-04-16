@@ -39,11 +39,15 @@ $('#main-create-button').click(function(e){
 // Edit Goal Button
 
 $('#main-goals-container').on('click', '.goal-edit', function (e) {
-	$(this).parent()[0].master.grow(window.innerWidth*2);
+	var el = $(this).parent();
+	el[0].master.gliding = false;
+	el[0].master.grow(window.innerWidth*2);
 	$('#main-create-goal-form').fadeIn();
 
 	UI.currGoal = $(this).parent()[0];
 });
+
+
 
 // Close Edit Form
 
@@ -156,6 +160,7 @@ UI.Box = (function(){
 		var x, y, width, height;
 		var r, g, b;
 		var dx, dy;
+		this.gliding = false;
 
 		var el = this.el = document.createElement('div');
 		this.el.className = 'goal';
@@ -195,6 +200,11 @@ UI.Box = (function(){
 	var _proto = init.prototype;
 
 	_proto.glide = function(){
+		this.gliding = true;
+		this._updateGlide();
+	}
+
+	_proto._updateGlide = function(){
 		var el = this.el;
 		this.moveTo(el.x + el.dx, el.y + el.dy);
 
@@ -202,8 +212,10 @@ UI.Box = (function(){
 		el.dx *= 0.95;
 		el.dy *= 0.95;
 
-		if (Math.abs(el.dx) > 0.02 || Math.abs(el.dy) > 0.02){
-			requestAnimationFrame(this.glide.bind(this));
+		if (this.gliding && (Math.abs(el.dx) > 0.02 || Math.abs(el.dy) > 0.02)){
+			requestAnimationFrame(this._updateGlide.bind(this));
+		} else {
+			this.gliding = false;
 		}
 	}
 
