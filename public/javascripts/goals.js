@@ -101,6 +101,8 @@ $('#main-edit-form').submit(function(e){
 	UI.currGoal.master.description = d;
 	UI.currGoal.master.deadline = dl;
 
+	$('#save-goal-button').attr('disabled', 'disabled');
+
 	// send save request to the server
 	$.ajax({
         url     : $(this).attr('action'),
@@ -114,10 +116,31 @@ $('#main-edit-form').submit(function(e){
 
 	function onSubmitError(err){
 		console.log("ERR", err);
+		$('#save-goal-button').removeAttr('disabled');
+		$('#goal-form-status').text('Error: Unable to save')
+			.addClass('failed-status').removeClass('success-status')
+			.fadeIn().slideDown();
+
+    	setTimeout(function(){
+			$('#goal-form-status').fadeOut();    		
+    	}, 3000);
 	}
 
     function onSubmitSuccess(data) {
-    	console.log("DATA", data)
+    	console.log("DATA", data);
+    	if (data.status === "OK"){
+
+    	} else {
+    		data.message;
+    	}
+    	$('#save-goal-button').removeAttr('disabled');
+    	$('#goal-form-status').text('Saved')
+    		.addClass('success-status').removeClass('failed')
+    		.fadeIn().slideDown();
+
+    	setTimeout(function(){
+			$('#goal-form-status').fadeOut();    		
+    	}, 3000);
     }
 });
 

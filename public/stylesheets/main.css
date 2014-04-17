@@ -91,11 +91,35 @@
 	z-index: 5;
 }
 
+#main-edit-form > textarea{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 #main-close-form{
 	position: fixed;
 	top: 20px;
 	right: 60px;
 	font-size: 50px;
+	text-align: right;
+}
+
+#goal-form-status{
+	font-size: 14px;
+	color: white;
+	margin-top: 10px;
+	text-align: center;
+	padding: 7px;
+	border-radius: 4px;
+	display: none;
+}
+
+.success-status{
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.failed-status{
+	background-color: rgba(100, 0, 0, 0.6);
 }
 
 .high{
@@ -113,7 +137,7 @@
 
 #main-deadline-label {
 	height: 34px;
-	width: 48%;
+	width: 41%;
 	margin-right: 6%;
 	line-height: 34px;
 }
