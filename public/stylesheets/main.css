@@ -82,19 +82,19 @@
 
 #main-create-goal-form {
 	display: none;
-	position: relative;
+	position: absolute;
+	top: 0px;
 	margin-top: 30px;
 	padding: 20px;
 	width: 50%;
-	z-index: 3;
+	z-index: 5;
 }
 
 #main-close-form{
-	position: absolute;
-	top: 0px;
-	right: 0px;
+	position: fixed;
+	top: 20px;
+	right: 60px;
 	font-size: 50px;
-	z-index: 3;
 }
 
 #main-close-form:hover{
