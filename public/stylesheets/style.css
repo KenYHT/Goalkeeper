@@ -9,11 +9,21 @@ a {
 	color: #00B7FF;
 }
 
-#error_message{
+#error_container{
 	display: none;
-	color: red;
-	font: 16px;
+	background: rgba(0, 0, 0, 0.6);
+	width: 40%;
+	border-radius: 4px;
+	margin-top: 2%;
+	padding-bottom: .5%;
+}
+
+#error_message{
+	/* display: none; */
+	color: white;
+	font-size: 14px;
 	text-align: center;
+	vertical-align: middle;
 }
 
 #error_break{
@@ -35,6 +45,10 @@ a {
 	width: 100%;
 	position: fixed;
 	overflow: auto;
+}
+
+.form_header{
+	text-align: center;
 }
 
 .custom_form{

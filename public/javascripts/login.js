@@ -3,7 +3,7 @@ $(".registerButton").click(function(){
     div.slideUp();
     $(this).fadeToggle();
     $("#register_form").delay(300).slideDown();
-    $("#error_message").fadeOut();
+    $("#error_container").fadeOut();
 });
 
 $("#submit_form").submit(function(e){
@@ -30,7 +30,8 @@ $("#submit_form").submit(function(e){
     		window.location = data.redirect;
     	}
     	else {
-    		$("#error_message").hide().fadeIn().text(data.err)
+            $("#error_message").text(data.err)
+            $("#error_container").hide().slideDown()
     	}
     }
 
@@ -58,8 +59,8 @@ $("#register_form").submit(function(event) {
 				errors += data.errorMessages[i] + "\n";
 				console.log(data.errorMessages[i]);
 			}
-
-			$("#error_message").fadeIn().text(errors);
+            $("#error_message").text(errors);
+            $("#error_container").hide().slideDown()
 		}
 	}
 
