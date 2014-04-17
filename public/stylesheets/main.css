@@ -98,6 +98,10 @@
 	font-size: 50px;
 }
 
+.high{
+	z-index: 5 !important;
+}
+
 #main-close-form:hover{
 	color: white;
 }

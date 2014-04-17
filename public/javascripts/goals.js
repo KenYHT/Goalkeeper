@@ -60,6 +60,7 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	el.master.gliding = false;
 	el.master.grow(window.innerWidth*2);
+	$(el).addClass('high');
 	$('#main-create-goal-form').fadeIn();
 
 	UI.currGoal = el;
@@ -72,6 +73,7 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 $('#main-close-form').click(function(){
 	UI.currGoal.master.shrink(window.innerWidth*2);
 	UI.currGoal = null;
+	$(UI.currGoal).removeClass('high');
 	$('#main-create-goal-form').fadeOut();
 });
 
@@ -122,16 +124,16 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	}
 
 	el.dragging = true;
-	console.log("now i'm dragging")
+	// console.log("now i'm dragging")
 }).on('mouseup', '.main-goal-bubble', function (e) {
 	var el = $(this)[0];
 	if (!el){
 		return;
 	}
 
+
 	el.dragging = false;
 	UI.selectedGoal = null;
-	console.log("uh done drag")
 
 	// glide
 	if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
@@ -139,6 +141,9 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		el.dy = UI.dy * UI.vScale;
 		el.master.glide();
 	}
+
+	// reset global velocity
+	UI.dx = UI.dy = 0;
 
 }).mouseleave(function (e) {
 	if (UI.selectedGoal){
@@ -153,6 +158,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		}
 	}
 	UI.selectedGoal = null;
+	UI.dx = UI.dy = 0;			// reset global velocity
 
 
 }).mousemove(function(e){
@@ -279,6 +285,7 @@ UI.Box = (function(){
 			requestAnimationFrame(this._updateGlide.bind(this));
 		} else {
 			this.gliding = false;
+			UI.dx = UI.dy = 0;
 		}
 	}
 
