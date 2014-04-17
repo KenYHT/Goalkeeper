@@ -63,6 +63,7 @@
 
 .main-nav-item {
 	padding: 10px;
+	tabindex: -1;
 }
 
 .main-nav-item:hover {

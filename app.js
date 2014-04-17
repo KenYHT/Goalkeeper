@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-require('./public/javascripts/user-model');
+require('./user-model');
 
 var express = require('express');
 var routes = require('./routes');
@@ -30,7 +30,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.post('/register', routes.create);
+app.post('/register', routes.register);
 app.get('/main', mainPage.index);
 
 http.createServer(app).listen(app.get('port'), function(){
