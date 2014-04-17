@@ -3,7 +3,7 @@
  */
 
 exports.index = function(req, res){
-	res.render('index', { title: 'Goalkeeper' });
+	res.render('index', { title: 'Goalkeeper'});
 };
 
 var mongoose = require('mongoose');
@@ -23,17 +23,13 @@ exports.register = function (req, res){
 		});
 
 		user.save(function(err){
-			if (err) {
-				console.log(err);
-				res.redirect('/');
-			} else {
-				res.redirect('/main');
-			}
+			console.log(err);
+			res.send({ errorMessages : "Could be registered."});
 		});
+
+		res.send({ errorMessages : "" });
 	} else {
-		// res.write(errors);
-		// res.redirect('/');
-		res.send(errors);
+		res.send({ errorMessages : errors});
 	}
 };
 
