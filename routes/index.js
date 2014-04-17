@@ -87,7 +87,7 @@ exports.login = function (req, res){
               res.send({err: "The username or password is incorrect."})
                 break;
             case reasons.MAX_ATTEMPTS:
-              res.send({err: "Fucking tryhard."})
+              res.send({err: "Max attempts reached."})
                 // send email or otherwise notify user that account is
                 // temporarily locked
                 break;
