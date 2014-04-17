@@ -27,15 +27,15 @@ block content
 					a.main-nav-item.main-sort-item Priority
 		div#main-goals-container
 		div#main-create-goal-form
-			form.form-signin#main-edit-form(role="form")
+			form.form-signin#main-edit-form(role="form" method="POST" action="/goal")
 				h2.form-signin-heading Create a new goal
-				input.form-control#goal-edit-title(type="text", name="goal-name", placeholder="What would you like to do?", required)
-				textarea#main-goal-description.form-control(type="text", name="goal-description", placeholder="A brief description of your goal. (Optional)")
+				input.form-control#goal-edit-title(type="text", name="name", placeholder="What would you like to do?", required)
+				textarea#main-goal-description.form-control(type="text", name="description", placeholder="A brief description of your goal. (Optional)")
 				dl.dl-horizontal
 					dt#main-deadline-label
 						label(for="goal-deadline") When do you need it done?
 					dd
-						input#main-goal-deadline.form-control(name="goal-deadline")
+						input#main-goal-deadline.form-control(name="deadline")
 				button.btn.btn-primary.btn-block#save-goal-button(type="submit") Save goal
 			div#main-close-form &times;
 		

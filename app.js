@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 require('./user-model');
+require('./goal-model');
 
 var express = require('express');
 var routes = require('./routes');
@@ -33,6 +34,7 @@ app.get('/', routes.index);
 app.post('/register', routes.register);
 app.post('/login', routes.login);
 app.get('/main', mainPage.index);
+app.post('/goal', mainPage.saveGoal);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

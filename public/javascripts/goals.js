@@ -4,7 +4,7 @@ var UI = UI || {
 	selectedGoal : null,	// when dragging
 	binRadius : 20000,		// detection radius for dropping goals into bins
 	dotRadius : 60,			// default dot size
-	friction : 1.00,		// friction for moving goals
+	friction : 0.95,		// friction for moving goals
 	dragging : false,
 	lastPageX : null,
 	lastPageY : null,
@@ -102,6 +102,23 @@ $('#main-edit-form').submit(function(e){
 	UI.currGoal.master.deadline = dl;
 
 	// send save request to the server
+	$.ajax({
+        url     : $(this).attr('action'),
+        type    : $(this).attr('method'),
+        data    : $(this).serialize(),
+        success : onSubmitSuccess,
+        error	: onSubmitError,
+        timeout : 3000
+    });
+
+
+	function onSubmitError(err){
+		console.log("ERR", err);
+	}
+
+    function onSubmitSuccess(data) {
+    	console.log("DATA", data)
+    }
 });
 
 
