@@ -4,7 +4,7 @@ var UI = UI || {
 	selectedGoal : null,	// when dragging
 	binRadius : 20000,		// detection radius for dropping goals into bins
 	dotRadius : 60,			// default dot size
-	friction : 0.95,		// friction for moving goals
+	friction : 1.00,		// friction for moving goals
 	dragging : false,
 	lastPageX : null,
 	lastPageY : null,
@@ -44,6 +44,11 @@ $('#main-create-button').click(function(e){
 		$('#main-goals-container').append(d.el);
 		title.focus();
 		UI.goals.push(d);
+
+		// SHOULD ?
+		d.el.dx = Math.random()*1 - 0.5;
+		d.el.dy = Math.random()*1 - 0.5;
+		d.glide();
 	}
 });
 
