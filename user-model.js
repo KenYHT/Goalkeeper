@@ -69,8 +69,8 @@ var reasons = UserSchema.statics.failedLogin = {
     MAX_ATTEMPTS: 2
 };
 
-UserSchema.statics.getAuthenticated = function(username, password, cb) {
-    this.findOne({ username: username }, function(err, user) {
+UserSchema.statics.getAuthenticated = function(email, password, cb) {
+    this.findOne({ email: email }, function(err, user) {
         if (err) return cb(err);
 
         // make sure the user exists
