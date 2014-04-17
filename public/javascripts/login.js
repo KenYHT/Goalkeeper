@@ -18,8 +18,6 @@ $("#submit_form").submit(function(e){
         error   : onLoginFailure,
         timeout : 3000
     });
-    console.log($(this).attr('action'))
-
 
     function onLoginFailure(err){
     	console.log("Failure")
@@ -32,10 +30,8 @@ $("#submit_form").submit(function(e){
     		window.location = data.redirect;
     	}
     	else {
-    		$("#error_message").fadeIn().text(data.err)
+    		$("#error_message").hide().fadeIn().text(data.err)
     	}
-
-        console.log(data)
     }
 
     return false;

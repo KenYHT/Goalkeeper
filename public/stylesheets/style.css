@@ -13,6 +13,11 @@ a {
 	display: none;
 	color: red;
 	font: 16px;
+	text-align: center;
+}
+
+#error_break{
+	display:none;
 }
 
 .white {
