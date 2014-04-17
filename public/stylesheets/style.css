@@ -47,6 +47,10 @@ a {
 	overflow: auto;
 }
 
+.form_header{
+	text-align: center;
+}
+
 .custom_form{
 	width: 40%;
 	margin-left: auto;
