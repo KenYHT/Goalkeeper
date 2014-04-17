@@ -215,13 +215,17 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			var distLeft = (e.pageX*e.pageX) + (e.pageY*e.pageY);
 			var distRight = (window.innerWidth-e.pageX)*(window.innerWidth-e.pageX) + (e.pageY*e.pageY);
 			if (distLeft < UI.binRadius){
-				$('#main-complete-bin').removeClass('small-circle')
-					.addClass('big-circle');
+				$('#main-complete-bin').addClass('big-circle').removeClass('small-circle');
+			} else {
+				$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
 			}
 			if (distRight < UI.binRadius){
-				$('#main-delete-bin').removeClass('small-circle')
-					.addClass('big-circle');
+				$('#main-delete-bin').addClass('big-circle').removeClass('small-circle');
+			} else {
+				$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
 			}
+
+			// add flags for this ^
 		}
 	}
 });
@@ -231,8 +235,10 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 
 // Dropping goals into bins
 
-$('.main-bins').mouseout(function (e) {
-	$(this).removeClass('big-circle').addClass('small-circle');
+$('.main-bins').mouseover(function (e){
+	$(this).addClass('big-circle').removeClass('small-circle');
+}).mouseout(function (e) {
+	$(this).addClass('small-circle').removeClass('big-circle');
 })
 
 
