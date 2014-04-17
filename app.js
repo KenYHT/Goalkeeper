@@ -22,6 +22,14 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.cookieParser('shhhhhh'));
+app.use(express.cookieSession())
+// app.use(express.session({ store : new RedisStore,
+// 						  secret : 'shhhhhh',
+// 						  cookie : {
+// 						  	maxAge : 24 * 60 * 60 * 1000
+// 						  }
+// 						}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -33,6 +41,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.post('/register', routes.register);
 app.post('/login', routes.login);
+app.get('/logout', routes.logout);
 app.get('/main', mainPage.index);
 app.post('/goal', mainPage.saveGoal);
 

@@ -30,8 +30,8 @@ $("#submit_form").submit(function(e){
     		window.location = data.redirect;
     	}
     	else {
-            $("#error_container").hide().fadeIn()
-    		$("#error_message").hide().fadeIn().text(data.err)
+            $("#error_message").text(data.err)
+            $("#error_container").hide().slideDown()
     	}
     }
 
@@ -59,9 +59,8 @@ $("#register_form").submit(function(event) {
 				errors += data.errorMessages[i] + "\n";
 				console.log(data.errorMessages[i]);
 			}
-
-            $("#error_container").hide().fadeIn()
-			$("#error_message").fadeIn().text(errors);
+            $("#error_message").text(errors);
+            $("#error_container").hide().slideDown()
 		}
 	}
 

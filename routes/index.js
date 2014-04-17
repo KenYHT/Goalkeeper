@@ -3,7 +3,10 @@
  */
 
 exports.index = function(req, res){
-	res.render('index', { title: 'Goalkeeper'});
+	if (req.session.email !== null)
+		res.render('main');
+	else
+		res.render('index', { title: 'Goalkeeper'});
 };
 
 var mongoose = require('mongoose');
@@ -46,7 +49,14 @@ function validateRegistration(email, password, verifyPassword) {
 								}, "Your password must contain only letters and numbers."],
 								[function() {
 									return validator.isLength(password, 6, 32);
-								}, "Your password must be between 6 and 32 characters long."]
+								}, "Your password must be between 6 and 32 characters long."],
+								[function() {
+									console.log(User.find( {email : email} ) + "asdfasdf");
+									if (User.find({ email : email }))
+										return false;
+									else
+										return true;
+								}, "This email has already been registered."]
 							];
 	var errors = [];
 
@@ -60,17 +70,23 @@ function validateRegistration(email, password, verifyPassword) {
 
 
 exports.login = function (req, res){
-  console.log(req.body);
-  User.getAuthenticated(req.body.email, req.body.password, function(err, user, reason) {
-        console.log("Authenticating.")
-        console.log(user)
-        console.log(arguments)
+	var cookieTime = 1000 * 60 * 24 * 30; // keep a cookie for 30 days
+	var userEmail = validator.escape(req.body.email);
+	var userPassword = validator.escape(req.body.password);
+
+  	User.getAuthenticated(userEmail, userPassword, function(err, user, reason) {
         if (err){
           console.log(err);
         }
 
         // login was successful if we have a user
         if (user) {
+        	if (req.body.remember) {
+        		req.session.email = userEmail;
+        		// req.session.expires = new Date(Date.now() + cookieTime);
+        		// req.session.maxAge = cookieTime;
+        	} else {
+        	}
             // handle login success
             console.log('login success');
             //res.redirect('/main');
@@ -93,5 +109,15 @@ exports.login = function (req, res){
                 break;
         }
     });
-
 };
+
+exports.logout = function(req, res) {
+	req.session.email = null;
+	// req.session = null;
+	// req.session.destroy(function(err){res.redirect('/')});
+	// req.session.destroy(function(err) {
+	// 	res.redirect('/');
+	// });
+
+	res.redirect('/');
+}

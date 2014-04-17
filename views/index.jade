@@ -30,17 +30,19 @@ block content
 		br
 		div.container
 			form.custom_form#submit_form(role="form", method="POST", action="/login")
-				h2.form-signin-heading Sign in
+				h2.form-signin-heading.form_header Sign in
 				input.form-control(name="email", type="email", placeholder="Email address")
 				input.form-control(name="password", type="password", placeholder="Password")
+				label.checkbox Remember me
+					input(name="remember", type="checkbox", value="remember-me")
 				br
 				button.btn.btn-lg.btn-primary.btn-block(type="submit") Sign in
 			div.container#error_container
 				h2#error_message 
 			br
-			button.btn.btn-lg.btn-primary.registerButton_custom.registerButton Register
+			div.btn.btn-lg.btn-primary.registerButton_custom.registerButton Register
 			form.custom_form#register_form(role="form", method="post", action="/register")
-				h2.form-signin-heading Register
+				h2.form-signin-heading.form_header Register
 				input.form-control(name="email", type="email", placeholder="Email address")
 				input.form-control(name="password", type="password", placeholder="Password")
 				input.form-control(name="verifyPassword", type="password", placeholder="Confirm Password")
