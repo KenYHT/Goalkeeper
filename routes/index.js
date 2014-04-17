@@ -27,7 +27,7 @@ exports.register = function (req, res){
 			res.send({ errorMessages : "Could be registered."});
 		});
 
-		res.send({ errorMessages : "" });
+		res.send({ redirect: "/main" });
 	} else {
 		res.send({ errorMessages : errors});
 	}

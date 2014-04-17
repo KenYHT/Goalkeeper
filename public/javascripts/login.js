@@ -53,13 +53,22 @@ $("#register_form").submit(function(event) {
 		timeout  : 3000
     });
 
-	function onSubmitSuccess(errors) {
-		console.log(errors);
-		console.log("asdflakdf");
+	function onSubmitSuccess(data) {
+		if (data.redirect) {
+			window.location = data.redirect;
+		} else {
+			var errors = "";
+			for (var i = 0; i < data.errorMessages.length; i++) {
+				errors += data.errorMessages[i] + "\n";
+				console.log(data.errorMessages[i]);
+			}
+
+			$("#error_message").fadeIn().text(errors);
+		}
 	}
 
-	function onSubmitError(errors) {
+	function onSubmitError(err) {
 		console.log(errors);
-		console.log("error");
+		console.log("Failure");
 	}
 });
