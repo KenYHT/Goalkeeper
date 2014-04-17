@@ -11,15 +11,21 @@ var User = mongoose.model( 'User' );
 
 exports.create = function ( req, res ){
 	console.log(req.body);
-  	var user = new User({
-  		email : req.body.email,
-		password : req.body.password
-	});
+  if (req.body.password!==req.body.confirmedPassword) {
+    alert("Passwords do not match.");
+  }
 
-  	user.save( function( err ){
-  		if (err) {
-  			console.log(err);
-  		}
-		res.redirect('/main');
-	});
+  else{
+    	var user = new User({
+    		email : req.body.email,
+  		password : req.body.password
+  	});
+
+    	user.save( function( err ){
+    		if (err) {
+    			console.log(err);
+    		}
+  		res.redirect('/main');
+  	});
+  }
 };
