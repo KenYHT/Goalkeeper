@@ -9,6 +9,12 @@ a {
 	color: #00B7FF;
 }
 
+#error_message{
+	display: none;
+	color: red;
+	font: 16px;
+}
+
 .white {
 	background-color: #FFF;
 }

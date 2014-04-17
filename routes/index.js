@@ -57,3 +57,41 @@ function validateRegistration(email, password, verifyPassword) {
 
 	return errors;
 }
+
+
+exports.login = function (req, res){
+  console.log(req.body);
+  User.getAuthenticated(req.body.email, req.body.password, function(err, user, reason) {
+        console.log("Authenticating.")
+        console.log(user)
+        console.log(arguments)
+        if (err){
+          console.log(err);
+        }
+
+        // login was successful if we have a user
+        if (user) {
+            // handle login success
+            console.log('login success');
+            //res.redirect('/main');
+            res.send({redirect: '/main'});
+            return;
+        }
+
+        // otherwise we can determine why we failed
+        var reasons = User.failedLogin;
+        switch (reason) {
+            case reasons.NOT_FOUND:
+              res.send({err: "The username or password is incorrect."})
+            case reasons.PASSWORD_INCORRECT:
+              res.send({err: "The username or password is incorrect."})
+                break;
+            case reasons.MAX_ATTEMPTS:
+              res.send({err: "Fucking tryhard."})
+                // send email or otherwise notify user that account is
+                // temporarily locked
+                break;
+        }
+    });
+
+};
