@@ -60,6 +60,7 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	el.master.gliding = false;
 	el.master.grow(window.innerWidth*2);
+	$(el).addClass('high');
 	$('#main-create-goal-form').fadeIn();
 
 	UI.currGoal = el;
@@ -72,6 +73,7 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 $('#main-close-form').click(function(){
 	UI.currGoal.master.shrink(window.innerWidth*2);
 	UI.currGoal = null;
+	$(UI.currGoal).removeClass('high');
 	$('#main-create-goal-form').fadeOut();
 });
 
