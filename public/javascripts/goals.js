@@ -2,7 +2,8 @@ var UI = UI || {
 	newGoal : true,
 	currGoal : null,		// when editing
 	selectedGoal : null,	// when dragging
-	dotRadius : 80,			// default dot size
+	dotRadius : 60,			// default dot size
+	friction : 0.95,		// friction for moving goals
 	dragging : false,
 	lastPageX : null,
 	lastPageY : null,
@@ -13,38 +14,55 @@ var UI = UI || {
 	goals: [],
 };
 
-// Click Testing
+// Create Goal Button
 
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
 		var d = new UI.Dot(150, 50, UI.dotRadius);
 		d.appear();
 		d.el.className = "main-goal-bubble";
-		d.el.style.lineHeight = UI.dotRadius+'px';
-		d.el.contentEditable = "true";
+
+		var body = document.createElement('span');
+		body.className = "goal-body";
+
+		var title = document.createElement('span');
+		title.className = "goal-title";
+		title.textContent = "Do: ";
+		title.contentEditable = "true";
 
 		var edit = document.createElement('a');
 		edit.href = '#';
 		edit.className = 'goal-edit';
 		edit.textContent = 'edit';
-		d.el.appendChild(edit);
+
+		body.appendChild(title);
+		body.appendChild(document.createElement('br'));
+		body.appendChild(edit);
+		d.el.appendChild(body);
 
 		$('#main-goals-container').append(d.el);
-		d.el.focus();
+		title.focus();
 		UI.goals.push(d);
 	}
 });
 
 
+// Click Goal -> Focus on Title
+
+$('#main-goals-container').on('click', '.goal', function (e) {
+	$('goal-title', this).focus();
+})
+
+
 // Edit Goal Button
 
 $('#main-goals-container').on('click', '.goal-edit', function (e) {
-	var el = $(this).parent();
-	el[0].master.gliding = false;
-	el[0].master.grow(window.innerWidth*2);
+	var el = $(this).parent().parent()[0];
+	el.master.gliding = false;
+	el.master.grow(window.innerWidth*2);
 	$('#main-create-goal-form').fadeIn();
 
-	UI.currGoal = $(this).parent()[0];
+	UI.currGoal = el;
 });
 
 
@@ -53,9 +71,39 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 
 $('#main-close-form').click(function(){
 	UI.currGoal.master.shrink(window.innerWidth*2);
+	UI.currGoal = null;
 	$('#main-create-goal-form').fadeOut();
 });
 
+
+
+// Hover over goal
+
+$('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
+	var el = $(this).finish()[0];
+	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
+		el.master.big = true;
+		el.master.updateSize();
+		// $('.goal-description', el).finish().slideDown(100);
+	}
+}).on('mouseover', '.main-goal-bubble > *', function(e){
+	var el = $(this).parent().finish()[0];
+	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
+		el.master.big = true;
+		el.master.updateSize();
+		// $('.goal-description', el).finish().slideDown(100);
+	}
+}).on('mouseout', '.main-goal-bubble', function (e) {
+	var el = $(this)[0];
+	if (e.toElement === el){	// don't capture when exiting to itself
+		return;
+	}
+	if (el.master.big === true && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
+		el.master.big = false;
+		el.master.updateSize();
+		// $('.goal-description', el).slideUp(100);
+	}
+});
 
 
 // Drag Testing
@@ -66,6 +114,12 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		return;
 	}
 	UI.selectedGoal = el;
+
+	if (el.master.big && !(el.dragging || el.master.gliding)){
+		$(el).finish();
+		el.master.big = false;
+		el.master.updateSize();
+	}
 
 	el.dragging = true;
 	console.log("now i'm dragging")
@@ -99,7 +153,6 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		}
 	}
 	UI.selectedGoal = null;
-	console.log("dragged off mayne")
 
 
 }).mousemove(function(e){
@@ -161,6 +214,7 @@ UI.Box = (function(){
 		var r, g, b;
 		var dx, dy;
 		this.gliding = false;
+		this.big = false;
 
 		var el = this.el = document.createElement('div');
 		this.el.className = 'goal';
@@ -199,6 +253,15 @@ UI.Box = (function(){
 
 	var _proto = init.prototype;
 
+	_proto.updateSize = function(){
+		var diff = parseInt(this.el.style.width, 10) - UI.dotRadius*2;
+		if (this.big){
+			this.grow(10-diff);
+		} else {
+			this.shrink(diff, 0);
+		}
+	}
+
 	_proto.glide = function(){
 		this.gliding = true;
 		this._updateGlide();
@@ -209,8 +272,8 @@ UI.Box = (function(){
 		this.moveTo(el.x + el.dx, el.y + el.dy);
 
 		// update & check
-		el.dx *= 0.95;
-		el.dy *= 0.95;
+		el.dx *= UI.friction;
+		el.dy *= UI.friction;
 
 		if (this.gliding && (Math.abs(el.dx) > 0.02 || Math.abs(el.dy) > 0.02)){
 			requestAnimationFrame(this._updateGlide.bind(this));
@@ -218,6 +281,7 @@ UI.Box = (function(){
 			this.gliding = false;
 		}
 	}
+
 
 	_proto.moveTo = function (x, y) {
 		var el = this.el;
@@ -241,6 +305,7 @@ UI.Box = (function(){
 			'position': 'absolute',
 			'left': el.x,
 			'top': el.y,
+			'line-height': 2*el.height+'px',
 			'width': el.radius*2,
 			'height': el.radius*2,
 			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
@@ -254,6 +319,7 @@ UI.Box = (function(){
 			'position': 'absolute',
 			'left': el.x + el.width,
 			'top': el.y + el.height,
+			'line-height': 2*el.height+'px',
 			'width': 10,
 			'height': 10,
 			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
@@ -266,25 +332,25 @@ UI.Box = (function(){
 		return this;
 	}
 
-	_proto.grow = function(d){
-		d = d || 20;
+	_proto.grow = function(d, duration){
+		d = (typeof d === 'undefined') ? 20 : d;
 		$(this.el).animate({
 			'left': '-='+(d/2),
 			'top': '-='+(d/2),
 			'width': '+='+d,
 			'height': '+='+d,
-		});
+		}, duration);
 		this.el.radius += d;
 		return this;
 	}
-	_proto.shrink = function(d){
-		d = d || 20;
+	_proto.shrink = function(d, duration){
+		d = (typeof d === 'undefined') ? 20 : d;
 		$(this.el).animate({
 			'left': '+='+(d/2),
 			'top': '+='+(d/2),
 			'width': '-='+d,
 			'height': '-='+d,
-		});
+		}, duration);
 		this.el.radius -= d;
 		return this;
 	}
