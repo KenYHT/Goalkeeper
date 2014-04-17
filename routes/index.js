@@ -19,21 +19,27 @@ exports.register = function (req, res){
 	var userVerifyPassword = validator.escape(req.body.verifyPassword);
 	var errors = validateRegistration(userEmail, userPassword, userVerifyPassword);
 
-	if (errors.length === 0) {
-		var user = new User({
-			email : req.body.email,
-			password : req.body.password
-		});
+	User.findOne({ email : userEmail }, 
+		function(err, data) {
+			if (data !== null)
+				errors.push("This email has already been registered.");
+			
+			if (errors.length === 0) {
+				var user = new User({
+					email : req.body.email,
+					password : req.body.password
+				});
 
-		user.save(function(err){
-			console.log(err);
-			res.send({ errorMessages : "Could be registered."});
-		});
+				user.save(function(err){
+					console.log(err);
+					res.send({ errorMessages : "Could be registered."});
+				});
 
-		res.send({ redirect: "/main" });
-	} else {
-		res.send({ errorMessages : errors});
-	}
+				res.send({ redirect: "/main" });
+			} else {
+				res.send({ errorMessages : errors});
+			}
+	});
 };
 
 function validateRegistration(email, password, verifyPassword) {
@@ -49,14 +55,7 @@ function validateRegistration(email, password, verifyPassword) {
 								}, "Your password must contain only letters and numbers."],
 								[function() {
 									return validator.isLength(password, 6, 32);
-								}, "Your password must be between 6 and 32 characters long."],
-								[function() {
-									console.log(User.find( {email : email} ) + "asdfasdf");
-									if (User.find({ email : email }))
-										return false;
-									else
-										return true;
-								}, "This email has already been registered."]
+								}, "Your password must be between 6 and 32 characters long."]
 							];
 	var errors = [];
 
