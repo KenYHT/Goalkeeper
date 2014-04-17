@@ -4,10 +4,10 @@ block content
 	div#main-container
 		div.main-bins
 			h4.main-bin-headers Complete
-			div#main-complete-bin.circle.main-bin-circles
+			div#main-complete-bin.circle.main-bin-circles.small-circle
 		div#main-delete-container.main-bins
 			h4.main-bin-headers Delete
-			div#main-delete-bin.circle.main-bin-circles
+			div#main-delete-bin.circle.main-bin-circles.small-circle
 		div#main-nav-container.main-toolbar-container.lightGreen
 			div#main-nav-toggle-container
 				span#main-nav-toggle.glyphicon.glyphicon-chevron-left.glyph-bigger
@@ -27,16 +27,16 @@ block content
 					a.main-nav-item.main-sort-item Priority
 		div#main-goals-container
 		div#main-create-goal-form
-			form.form-signin(role="form")
+			form.form-signin#main-edit-form(role="form")
 				h2.form-signin-heading Create a new goal
-				input.form-control(type="text", name="goal-name", placeholder="What would you like to do?", required)
+				input.form-control#goal-edit-title(type="text", name="goal-name", placeholder="What would you like to do?", required)
 				textarea#main-goal-description.form-control(type="text", name="goal-description", placeholder="A brief description of your goal. (Optional)")
 				dl.dl-horizontal
 					dt#main-deadline-label
 						label(for="goal-deadline") When do you need it done?
 					dd
 						input#main-goal-deadline.form-control(name="goal-deadline")
-				button.btn.btn-primary.btn-block(type="submit") Create goal
+				button.btn.btn-primary.btn-block#save-goal-button(type="submit") Save goal
 			div#main-close-form &times;
 		
 	script(type='text/javascript', src='/javascripts/goals.js')

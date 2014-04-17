@@ -142,16 +142,24 @@
 }
 
 .main-bin-circles {
-	width: 50px;
-	height: 50px;
 	margin: 0 auto;
 	transition: width .1s, height .1s;
 }
 
+.small-circle{
+	width: 50px;
+	height: 50px;
+}
+
+.big-circle{
+	width: 75px;
+	height: 75px;
+}
+
 .main-bin-circles:hover {
-	width: 175px;
-	height: 175px;
-	margin-top: -25px;
+	width: 75px;
+	height: 75px;
+	/*margin-top: -25px;*/
 	transition: width .1s, height .1s;
 }
 

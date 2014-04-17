@@ -2,6 +2,7 @@ var UI = UI || {
 	newGoal : true,
 	currGoal : null,		// when editing
 	selectedGoal : null,	// when dragging
+	binRadius : 20000,		// detection radius for dropping goals into bins
 	dotRadius : 60,			// default dot size
 	friction : 0.95,		// friction for moving goals
 	dragging : false,
@@ -54,16 +55,48 @@ $('#main-goals-container').on('click', '.goal', function (e) {
 })
 
 
+
+
+// Update internal model when typing in goal
+
+$('#main-goals-container').on('keyup', '.goal-title', function(){
+	var el = $(this).parent().parent()[0];
+	el.master.title = $(this).text();
+});
+
+
 // Edit Goal Button
 
 $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	el.master.gliding = false;
 	el.master.grow(window.innerWidth*2);
+	$('.main-goal-bubble').removeClass('high');
 	$(el).addClass('high');
 	$('#main-create-goal-form').fadeIn();
 
+	$('#goal-edit-title').val(el.master.title);
+	$('#main-goal-description').val(el.master.description);
+	$('#main-goal-deadline').val(el.master.deadline);
+
 	UI.currGoal = el;
+});
+
+
+// Edit Form Save Button
+
+$('#main-edit-form').submit(function(e){
+	e.preventDefault();
+
+	var t = $('#goal-edit-title').val();
+	var d = $('#main-goal-description').val();
+	var dl = $('#main-goal-deadline').val();
+
+	UI.currGoal.master.title = t;
+	UI.currGoal.master.description = d;
+	UI.currGoal.master.deadline = dl;
+
+	// send save request to the server
 });
 
 
@@ -177,9 +210,30 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			UI.lastPageX = newX;
 			UI.lastPageY = newY;
 
+
+			// calculate distance to bins
+			var distLeft = (e.pageX*e.pageX) + (e.pageY*e.pageY);
+			var distRight = (window.innerWidth-e.pageX)*(window.innerWidth-e.pageX) + (e.pageY*e.pageY);
+			if (distLeft < UI.binRadius){
+				$('#main-complete-bin').removeClass('small-circle')
+					.addClass('big-circle');
+			}
+			if (distRight < UI.binRadius){
+				$('#main-delete-bin').removeClass('small-circle')
+					.addClass('big-circle');
+			}
 		}
 	}
 });
+
+
+
+
+// Dropping goals into bins
+
+$('.main-bins').mouseout(function (e) {
+	$(this).removeClass('big-circle').addClass('small-circle');
+})
 
 
 
