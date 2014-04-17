@@ -19,7 +19,7 @@ var UI = UI || {
 
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
-		var d = new UI.Dot(150, 50, UI.dotRadius);
+		var d = new UI.Dot(undefined, undefined, UI.dotRadius);
 		d.appear();
 		d.el.className = "main-goal-bubble";
 
