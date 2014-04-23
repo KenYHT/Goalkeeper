@@ -1,7 +1,8 @@
 extends layout
 
 block content
-	div#main-container(ng-app='Goalkeeper' ng-controller='MainController')
+	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
+		{{understand}}
 		div.main-bins
 			h4.main-bin-headers Complete
 			div#main-complete-bin.circle.main-bin-circles.small-circle
@@ -41,6 +42,10 @@ block content
 			div#main-close-form &times;
 		
 
-    script(type='text/javascript' src='/javascripts/vendor/angular.min.js')
+	script(type='text/javascript' src='/javascripts/vendor/angular.min.js')
+	script(type='text/javascript' src='/javascripts/vendor/angular-cookies.min.js')
+	script(type='text/javascript' src='/javascripts/vendor/angular-resource.min.js')
+	script(type='text/javascript' src='/javascripts/vendor/angular-sanitize.min.js')
+	script(type='text/javascript', src='/javascripts/app.js')
 	script(type='text/javascript', src='/javascripts/goals.js')
 	script(type='text/javascript', src='/javascripts/mainPage.js')
