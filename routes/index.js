@@ -97,12 +97,13 @@ exports.login = function (req, res){
         var reasons = User.failedLogin;
         switch (reason) {
             case reasons.NOT_FOUND:
-              res.send({err: "The username or password is incorrect."})
+            	res.send({err: "The username or password is incorrect."})
+            	break;
             case reasons.PASSWORD_INCORRECT:
-              res.send({err: "The username or password is incorrect."})
+            	res.send({err: "The username or password is incorrect."})
                 break;
             case reasons.MAX_ATTEMPTS:
-              res.send({err: "Max attempts reached."})
+            	res.send({err: "Max attempts reached."})
                 // send email or otherwise notify user that account is
                 // temporarily locked
                 break;
