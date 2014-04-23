@@ -176,13 +176,13 @@
 }
 
 .big-circle{
-	width: 75px;
-	height: 75px;
+	width: 100px;
+	height: 100px;
 }
 
 .main-bin-circles:hover {
-	width: 75px;
-	height: 75px;
+	width: 100px;
+	height: 100px;
 	/*margin-top: -25px;*/
 	transition: width .1s, height .1s;
 }
@@ -202,12 +202,13 @@
 	-ms-user-select: none;
 	user-select: none;
 	/*width: 120px;*/
-	/*transition: 0.2s ease all;*/
+	/*transition: width .2s, height .2s;*/
 }
 
 .main-goal-bubble:hover{
 	/*width: 200px;*/
 }
+
 
 .goal-body{
 	display: inline-block;

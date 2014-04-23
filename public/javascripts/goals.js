@@ -1,9 +1,10 @@
 var UI = UI || {
 	newGoal : true,
-	currGoal : null,		// when editing
+	currGoal : null,		// goal when editing, null when not editing
 	selectedGoal : null,	// when dragging
 	binRadius : 20000,		// detection radius for dropping goals into bins
 	dotRadius : 60,			// default dot size
+	smallDotRadius: 40,		// size when hovering over bin
 	friction : 0.95,		// friction for moving goals
 	dragging : false,
 	lastPageX : null,
@@ -13,13 +14,20 @@ var UI = UI || {
 	vScale : 5,				// amplify velocity, 0-no momentum
 	lastUpdate : -1,		// used to calculate time
 	goals: [],
+	hoverComplete: false,
+	hoverDelete: false,
+	marginX: 100,			// goals will spawn within window margins
+	marginY: 80,
 };
 
 // Create Goal Button
 
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
-		var d = new UI.Dot(undefined, undefined, UI.dotRadius);
+		var marginX = UI.marginX + UI.dotRadius, marginY = UI.marginY + UI.dotRadius;
+		var x = Math.floor(Math.random()*(window.innerWidth - 2*marginX) + marginX);
+		var y = Math.floor(Math.random()*(window.innerHeight - 2*marginY) + marginY);
+		var d = new UI.Dot(x, y, UI.dotRadius);		// undefined, undefined for random spawn
 		d.appear();
 		d.el.className = "main-goal-bubble";
 
@@ -164,14 +172,12 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
-		// $('.goal-description', el).finish().slideDown(100);
 	}
 }).on('mouseover', '.main-goal-bubble > *', function(e){
 	var el = $(this).parent().finish()[0];
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
-		// $('.goal-description', el).finish().slideDown(100);
 	}
 }).on('mouseout', '.main-goal-bubble', function (e) {
 	var el = $(this)[0];
@@ -181,7 +187,6 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	if (el.master.big === true && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = false;
 		el.master.updateSize();
-		// $('.goal-description', el).slideUp(100);
 	}
 });
 
@@ -190,7 +195,7 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 
 $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	var el = $(this)[0];
-	if (!el){
+	if (UI.currGoal != null  || !el){		// if editing, or if el is invalid
 		return;
 	}
 	UI.selectedGoal = el;
@@ -205,13 +210,39 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	// console.log("now i'm dragging")
 }).on('mouseup', '.main-goal-bubble', function (e) {
 	var el = $(this)[0];
-	if (!el){
+	if (UI.currGoal != null  || !el){		// if editing, or if el is invalid
 		return;
 	}
 
-
+	// update state of element
 	el.dragging = false;
 	UI.selectedGoal = null;
+
+	// reset bin size
+	$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
+	$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
+
+	// if releasing over a bin, then complete or delete it
+	if (UI.hoverComplete){
+		el.master.shrink(el.width*2, undefined, function(){
+			el.remove();
+		});
+
+		// mark goal as complete
+		el.master.completed = true;
+		el.master.save();
+		return;
+	} else if (UI.hoverDelete){
+		el.master.shrink(el.width*2, undefined, function () {
+			el.remove();
+		});
+
+		// mark for deletion
+		el.master.deleted = true;
+		el.master.save();
+		return;
+	}
+
 
 	// glide
 	if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
@@ -227,6 +258,9 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	if (UI.selectedGoal){
 		var el = UI.selectedGoal;
 		el.dragging = false;
+		el.master.resetSize();
+		$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
+		$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
 
 		// glide
 		if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
@@ -237,7 +271,6 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	}
 	UI.selectedGoal = null;
 	UI.dx = UI.dy = 0;			// reset global velocity
-
 
 }).mousemove(function(e){
 	var el = UI.selectedGoal;
@@ -259,49 +292,37 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			// calculate distance to bins
 			var distLeft = (e.pageX*e.pageX) + (e.pageY*e.pageY);
 			var distRight = (window.innerWidth-e.pageX)*(window.innerWidth-e.pageX) + (e.pageY*e.pageY);
-			if (distLeft < UI.binRadius){
+
+			if (UI.hoverComplete == false && distLeft < UI.binRadius){
+				UI.hoverComplete = true;
 				$('#main-complete-bin').addClass('big-circle').removeClass('small-circle');
-			} else {
+				el.master.resetSize(true);
+
+			} else if (UI.hoverComplete == true && distLeft >= UI.binRadius){
+				UI.hoverComplete = false;
 				$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
-			}
-			if (distRight < UI.binRadius){
-				$('#main-delete-bin').addClass('big-circle').removeClass('small-circle');
-			} else {
-				$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
+				el.master.resetSize();
+
 			}
 
-			// add flags for this ^
+			if (UI.hoverDelete == false && distRight < UI.binRadius){
+				UI.hoverDelete = true;
+				$('#main-delete-bin').addClass('big-circle').removeClass('small-circle');
+				el.master.resetSize(true);
+
+			} else if (UI.hoverDelete == true && distRight >= UI.binRadius) {
+				UI.hoverDelete = false;
+				$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
+				el.master.resetSize();
+
+			}
+
 		}
 	}
 });
 
 
 
-
-// Dropping goals into bins
-
-$('.main-bins').mouseover(function (e){
-	$(this).addClass('big-circle').removeClass('small-circle');
-}).mouseout(function (e) {
-	$(this).addClass('small-circle').removeClass('big-circle');
-})
-
-
-
-// Type Testing
-
-// $('body').keyup(function(e){
-// 	console.log(e)
-
-// 	if (newGoal){
-// 		var d = new UI.Dot(Math.floor(Math.random()*window.innerWidth-UI.dotRadius),
-// 			Math.floor(Math.random()*window.innerHeight-radius));
-// 		d.appear();
-// 	} else if (currGoal !== null){
-
-// 	}
-
-// });
 
 
 /*
@@ -326,6 +347,8 @@ UI.Box = (function(){
 		var dx, dy;
 		this.gliding = false;
 		this.big = false;
+		this.completed = false;
+		this.deleted = false;
 
 		var el = this.el = document.createElement('div');
 		this.el.className = 'goal';
@@ -364,12 +387,31 @@ UI.Box = (function(){
 
 	var _proto = init.prototype;
 
+	// save the goal internal data
+	_proto.save = function () {
+		
+	}
+
 	_proto.updateSize = function(){
 		var diff = parseInt(this.el.style.width, 10) - UI.dotRadius*2;
 		if (this.big){
 			this.grow(10-diff);
 		} else {
 			this.shrink(diff, 0);
+		}
+	}
+
+	_proto.resetSize = function(small){
+		if (small){
+			$(this.el).css({
+				'width': UI.smallDotRadius*2,
+				'height': UI.smallDotRadius*2,
+			});
+		} else {
+			$(this.el).css({
+				'width': UI.dotRadius*2,
+				'height': UI.dotRadius*2,
+			});
 		}
 	}
 
@@ -444,25 +486,33 @@ UI.Box = (function(){
 		return this;
 	}
 
-	_proto.grow = function(d, duration){
+	_proto.grow = function(d, duration, cb){
 		d = (typeof d === 'undefined') ? 20 : d;
 		$(this.el).animate({
 			'left': '-='+(d/2),
 			'top': '-='+(d/2),
 			'width': '+='+d,
 			'height': '+='+d,
-		}, duration);
+		}, duration, function() {
+			if (cb){
+				cb();
+			}
+		});
 		this.el.radius += d;
 		return this;
 	}
-	_proto.shrink = function(d, duration){
+	_proto.shrink = function(d, duration, cb){
 		d = (typeof d === 'undefined') ? 20 : d;
 		$(this.el).animate({
 			'left': '+='+(d/2),
 			'top': '+='+(d/2),
 			'width': '-='+d,
 			'height': '-='+d,
-		}, duration);
+		}, duration, function() {
+			if (cb){
+				cb();
+			}
+		});
 		this.el.radius -= d;
 		return this;
 	}
