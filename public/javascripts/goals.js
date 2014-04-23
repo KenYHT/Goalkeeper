@@ -63,11 +63,9 @@ $('#main-create-button').click(function(e){
 
 // Click Goal -> Focus on Title
 
-$('#main-goals-container').on('click', '.goal', function (e) {
-	$('goal-title', this).focus();
+$('#main-goals-container').on('click', '.main-goal-bubble', function (e) {
+	$('.goal-title', this).focus();
 })
-
-
 
 
 // Update internal model when typing in goal
@@ -153,7 +151,6 @@ $('#main-edit-form').submit(function(e){
 });
 
 
-
 // Close Edit Form
 
 $('#main-close-form').click(function(){
@@ -162,7 +159,6 @@ $('#main-close-form').click(function(){
 	$(UI.currGoal).removeClass('high');
 	$('#main-create-goal-form').fadeOut();
 });
-
 
 
 // Hover over goal
@@ -253,7 +249,6 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 
 	// reset global velocity
 	UI.dx = UI.dy = 0;
-
 }).mouseleave(function (e) {
 	if (UI.selectedGoal){
 		var el = UI.selectedGoal;
@@ -271,7 +266,6 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	}
 	UI.selectedGoal = null;
 	UI.dx = UI.dy = 0;			// reset global velocity
-
 }).mousemove(function(e){
 	var el = UI.selectedGoal;
 	if (UI.selectedGoal){
@@ -524,9 +518,7 @@ UI.Box = (function(){
 
 
 
-
 // Dot Class
-
 /*
 	Dot Constructor
 		x, y, radius
