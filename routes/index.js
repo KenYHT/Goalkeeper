@@ -87,7 +87,7 @@ exports.login = function (req, res){
         	if (req.body.remember) {
         		res.cookie('remember', 1, { maxAge : cookieTime });
         	} else {
-        		res.cookie('remember', 1, { maxAge : minute });
+        		res.cookie('remember', 1, { maxAge : hour });
         	}
             // handle login success
             // console.log('login success');
