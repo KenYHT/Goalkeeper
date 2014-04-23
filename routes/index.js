@@ -3,8 +3,9 @@
  */
 
 exports.index = function(req, res){
-	if (req.session.email !== null)
-		res.render('main');
+	// console.log(req.session.user);
+	if (req.cookies.remember)
+		res.render('main');	
 	else
 		res.render('index', { title: 'Goalkeeper'});
 };
@@ -69,7 +70,8 @@ function validateRegistration(email, password, verifyPassword) {
 
 
 exports.login = function (req, res){
-	var cookieTime = 1000 * 60 * 24 * 30; // keep a cookie for 30 days
+	var cookieTime = 1000 * 60 * 60 * 24 * 30; // keep a cookie for 30 days
+	var hour = 1000 * 60 * 60; // keep a cookie for a minute
 	var userEmail = validator.escape(req.body.email);
 	var userPassword = validator.escape(req.body.password);
 
@@ -80,14 +82,15 @@ exports.login = function (req, res){
 
         // login was successful if we have a user
         if (user) {
+        	req.session.user = userEmail;
+
         	if (req.body.remember) {
-        		req.session.email = userEmail;
-        		// req.session.expires = new Date(Date.now() + cookieTime);
-        		// req.session.maxAge = cookieTime;
+        		res.cookie('remember', 1, { maxAge : cookieTime });
         	} else {
+        		res.cookie('remember', 1, { maxAge : minute });
         	}
             // handle login success
-            console.log('login success');
+            // console.log('login success');
             //res.redirect('/main');
             res.send({redirect: '/main'});
             return;
@@ -111,12 +114,7 @@ exports.login = function (req, res){
 };
 
 exports.logout = function(req, res) {
-	req.session.email = null;
-	// req.session = null;
-	// req.session.destroy(function(err){res.redirect('/')});
-	// req.session.destroy(function(err) {
-	// 	res.redirect('/');
-	// });
-
+	res.clearCookie('remember'); // clear the cookie
+	req.session = null; // kill the session
 	res.redirect('/');
 }
