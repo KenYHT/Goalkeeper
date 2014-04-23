@@ -3,12 +3,13 @@
  * The 'UI' namespace holds a set of options for configuring the frontend
  */
 var UI = UI || {
-	newGoal : true,
+	searching: false,		// is the search window open?
 	currGoal : null,		// goal when editing, null when not editing
 	selectedGoal : null,	// when dragging
 	binRadius : 20000,		// detection radius for dropping goals into bins
-	dotRadius : 60,			// default dot size
-	smallDotRadius: 40,		// size when hovering over bin
+	dotRadius : 30,			// default dot size
+	smallDotRadius: 20,		// size when hovering over bin
+	hoverGrowth: 60,		// growth in px when hovering over a goal
 	friction : 0.95,		// friction for moving goals
 	dragging : false,
 	lastPageX : null,
@@ -20,8 +21,10 @@ var UI = UI || {
 	goals: [],
 	hoverComplete: false,
 	hoverDelete: false,
-	marginX: 100,			// goals will spawn within window margins
+	marginX: 170,			// goals will spawn within window margins
 	marginY: 80,
+	rowMax: 8,				// max # of goals in a row
+	colMax: 5,				// max # of goals in a col
 };
 
 // Create Goal Button
@@ -312,6 +315,50 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 });
 
 
+// Searching
+document.onkeyup = function (e){
+	// check for focus
+	if (UI.searching == false && UI.currGoal == null && UI.selectedGoal == null){
+		UI.searching = true;
+		$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', 'blur(10px)');
+
+		$('#search-container').show();
+		$('#searchbox')
+			.val(String.fromCharCode(e.which))
+			.fadeIn()
+			.focus();
+	}
+};
+$('#main-goals-container').click(function(){
+	$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
+	$('#search-container, #searchbox').hide();
+	UI.searching = false;
+});
+$('.search-result').click(function(){
+	// open search result
+
+
+	$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
+	$('#search-container, #searchbox').hide();
+	UI.searching = false;
+});
+
+
+// Sorting
+$('#sort-time').click(function () {
+	// normalize sizes
+
+	var goals = UI.goals, len = goals.length;
+	var dx = (window.innerWidth - 2*UI.marginX) / UI.rowMax;
+	var dy = (window.innerHeight - 2*UI.marginX) / UI.colMax + UI.dotRadius/2;
+	for (var i=0; i<len; i++){
+		goals[i].moveTo(UI.marginX+(i % UI.rowMax)*dx, Math.floor(i / UI.rowMax)*dy+UI.marginY, true);
+	}
+});
+$('#sort-priority').click(function () {
+	
+});
+
 
 
 
@@ -385,7 +432,7 @@ UI.Box = (function(){
 	_proto.updateSize = function(){
 		var diff = parseInt(this.el.style.width, 10) - UI.dotRadius*2;
 		if (this.big){
-			this.grow(10-diff);
+			this.grow(UI.hoverGrowth-diff);
 		} else {
 			this.shrink(diff, 0);
 		}
@@ -427,7 +474,8 @@ UI.Box = (function(){
 	}
 
 
-	_proto.moveTo = function (x, y) {
+	_proto.moveTo = function (x, y, slide, duration, callback) {
+		callback = callback || function(){};
 		var el = this.el;
 		x = (x > window.innerWidth) ? 0 : (x < 0) ? window.innerWidth : x;
 		y = (y > window.innerHeight) ? 0 : (y < 0) ? window.innerHeight : y;
@@ -436,10 +484,17 @@ UI.Box = (function(){
 		el.x = x;
 		el.y = y;
 
-		$(el).css({
-			'left': el.x - el.radius,
-			'top': el.y - el.radius,
-		});
+		if (slide == true){
+			$(el).animate({
+				'left': el.x - el.radius,
+				'top': el.y - el.radius,
+			}, duration, callback);
+		} else {
+			$(el).css({
+				'left': el.x - el.radius,
+				'top': el.y - el.radius,
+			}, callback);
+		}
 		return this;
 	}
 
@@ -483,6 +538,7 @@ UI.Box = (function(){
 			'top': '-='+(d/2),
 			'width': '+='+d,
 			'height': '+='+d,
+			'line-height': '+='+d,
 		}, duration, function() {
 			if (cb){
 				cb();
@@ -498,6 +554,7 @@ UI.Box = (function(){
 			'top': '+='+(d/2),
 			'width': '-='+d,
 			'height': '-='+d,
+			'line-height': '-='+d,
 		}, duration, function() {
 			if (cb){
 				cb();

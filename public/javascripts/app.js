@@ -8,3 +8,7 @@ var app = angular.module('goalkeeperApp', [
 app.controller("MainController", function($scope){
 	$scope.understand = "I now understand how the scope works!";
 });
+
+app.factory('Dot', function() {
+
+});

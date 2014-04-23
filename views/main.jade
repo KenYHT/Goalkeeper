@@ -23,10 +23,12 @@ block content
 		div#main-sort-container.main-toolbar-container.white Sort By
 			ul.main-list
 				li.main-list-item
-					a.main-nav-item.main-sort-item Time Remaining
+					a.main-nav-item.main-sort-item#sort-time Time Remaining
 				li.main-list-item
-					a.main-nav-item.main-sort-item Priority
+					a.main-nav-item.main-sort-item#sort-priority Priority
 		div#main-goals-container
+		div#search-container
+			input#searchbox
 		div#main-create-goal-form
 			form.form-signin#main-edit-form(role="form" method="POST" action="/goal")
 				h2.form-signin-heading Create a new goal

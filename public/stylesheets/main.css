@@ -81,6 +81,27 @@
 	overflow-y: auto;
 }
 
+#search-container{
+	position: fixed;
+	left: 50px;
+	top: 100px;
+	display: none;
+	z-index: 3;
+	width: 100%;
+}
+
+#searchbox{
+	width: 30%;
+	font-size: 30px;
+	display: none;
+	background-color: transparent;
+	outline: none;
+	border: none;
+	border-left: 5px solid lightcoral;
+	padding-left: 10px;
+	width: 50%;
+}
+
 #main-create-goal-form {
 	display: none;
 	position: absolute;
