@@ -216,6 +216,10 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	el.dragging = false;
 	UI.selectedGoal = null;
 
+	// reset bin size
+	$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
+	$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
+
 	// if releasing over a bin, then complete or delete it
 	if (UI.hoverComplete){
 		el.master.shrink(el.width*2, undefined, function(){
@@ -252,6 +256,9 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	if (UI.selectedGoal){
 		var el = UI.selectedGoal;
 		el.dragging = false;
+		el.master.resetSize();
+		$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
+		$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
 
 		// glide
 		if (Math.abs(UI.dx) > 1 || Math.abs(UI.dy) > 1){
@@ -287,45 +294,27 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			if (UI.hoverComplete == false && distLeft < UI.binRadius){
 				UI.hoverComplete = true;
 				$('#main-complete-bin').addClass('big-circle').removeClass('small-circle');
-				$(el).css({
-					'width': UI.smallDotRadius*2,
-					'height': UI.smallDotRadius*2,
-				});
-
-				// addClass('small-bubble');
+				el.master.resetSize(true);
 
 			} else if (UI.hoverComplete == true && distLeft >= UI.binRadius){
 				UI.hoverComplete = false;
 				$('#main-complete-bin').addClass('small-circle').removeClass('big-circle');
-				$(el).css({
-					'width': UI.dotRadius*2,
-					'height': UI.dotRadius*2,
-				});
-				// $(el).removeClass('small-bubble');
+				el.master.resetSize();
 
 			}
 
 			if (UI.hoverDelete == false && distRight < UI.binRadius){
 				UI.hoverDelete = true;
 				$('#main-delete-bin').addClass('big-circle').removeClass('small-circle');
-				$(el).css({
-					'width': UI.smallDotRadius*2,
-					'height': UI.smallDotRadius*2,
-				});
-				// $(el).addClass('small-bubble');
+				el.master.resetSize(true);
 
 			} else if (UI.hoverDelete == true && distRight >= UI.binRadius) {
 				UI.hoverDelete = false;
 				$('#main-delete-bin').addClass('small-circle').removeClass('big-circle');
-				$(el).css({
-					'width': UI.dotRadius*2,
-					'height': UI.dotRadius*2,
-				});
-				// $(el).removeClass('small-bubble');
+				el.master.resetSize();
 
 			}
 
-			// add flags for this ^
 		}
 	}
 });
@@ -417,6 +406,20 @@ UI.Box = (function(){
 			this.grow(10-diff);
 		} else {
 			this.shrink(diff, 0);
+		}
+	}
+
+	_proto.resetSize = function(small){
+		if (small){
+			$(this.el).css({
+				'width': UI.smallDotRadius*2,
+				'height': UI.smallDotRadius*2,
+			});
+		} else {
+			$(this.el).css({
+				'width': UI.dotRadius*2,
+				'height': UI.dotRadius*2,
+			});
 		}
 	}
 
