@@ -117,4 +117,4 @@ UserSchema.statics.getAuthenticated = function(email, password, cb) {
 
 module.exports = mongoose.model('User', UserSchema);
 
-mongoose.connect( 'mongodb://localhost/Goalkeeper' );
+mongoose.connect( 'mongodb://Goalkeeper:2goal4keeper@ds031637.mongolab.com:31637/goalkeeper' );
