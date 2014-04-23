@@ -1,3 +1,7 @@
+/*
+ * This file describes the user interface for Goalkeeper
+ * The 'UI' namespace holds a set of options for configuring the frontend
+ */
 var UI = UI || {
 	newGoal : true,
 	currGoal : null,		// goal when editing, null when not editing
@@ -21,7 +25,6 @@ var UI = UI || {
 };
 
 // Create Goal Button
-
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
 		var marginX = UI.marginX + UI.dotRadius, marginY = UI.marginY + UI.dotRadius;
@@ -62,14 +65,12 @@ $('#main-create-button').click(function(e){
 
 
 // Click Goal -> Focus on Title
-
 $('#main-goals-container').on('click', '.main-goal-bubble', function (e) {
 	$('.goal-title', this).focus();
 })
 
 
 // Update internal model when typing in goal
-
 $('#main-goals-container').on('keyup', '.goal-title', function(){
 	var el = $(this).parent().parent()[0];
 	el.master.title = $(this).text();
@@ -77,7 +78,6 @@ $('#main-goals-container').on('keyup', '.goal-title', function(){
 
 
 // Edit Goal Button
-
 $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	el.master.gliding = false;
@@ -95,7 +95,6 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 
 
 // Edit Form Save Button
-
 $('#main-edit-form').submit(function(e){
 	e.preventDefault();
 
@@ -152,7 +151,6 @@ $('#main-edit-form').submit(function(e){
 
 
 // Close Edit Form
-
 $('#main-close-form').click(function(){
 	UI.currGoal.master.shrink(window.innerWidth*2);
 	UI.currGoal = null;
@@ -162,7 +160,6 @@ $('#main-close-form').click(function(){
 
 
 // Hover over goal
-
 $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	var el = $(this).finish()[0];
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
@@ -188,7 +185,6 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 
 
 // Drag Testing
-
 $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	var el = $(this)[0];
 	if (UI.currGoal != null  || !el){		// if editing, or if el is invalid
@@ -320,7 +316,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 
 
 /*
- *	Object Classes
+ *	Shape Object Classes
  *		Box, Dot
  */
 
