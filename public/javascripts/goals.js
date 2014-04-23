@@ -16,13 +16,18 @@ var UI = UI || {
 	goals: [],
 	hoverComplete: false,
 	hoverDelete: false,
+	marginX: 100,			// goals will spawn within window margins
+	marginY: 80,
 };
 
 // Create Goal Button
 
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
-		var d = new UI.Dot(undefined, undefined, UI.dotRadius);
+		var marginX = UI.marginX + UI.dotRadius, marginY = UI.marginY + UI.dotRadius;
+		var x = Math.floor(Math.random()*(window.innerWidth - 2*marginX) + marginX);
+		var y = Math.floor(Math.random()*(window.innerHeight - 2*marginY) + marginY);
+		var d = new UI.Dot(x, y, UI.dotRadius);		// undefined, undefined for random spawn
 		d.appear();
 		d.el.className = "main-goal-bubble";
 
@@ -167,14 +172,12 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
-		// $('.goal-description', el).finish().slideDown(100);
 	}
 }).on('mouseover', '.main-goal-bubble > *', function(e){
 	var el = $(this).parent().finish()[0];
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
-		// $('.goal-description', el).finish().slideDown(100);
 	}
 }).on('mouseout', '.main-goal-bubble', function (e) {
 	var el = $(this)[0];
@@ -184,7 +187,6 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	if (el.master.big === true && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = false;
 		el.master.updateSize();
-		// $('.goal-description', el).slideUp(100);
 	}
 });
 
@@ -319,16 +321,6 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	}
 });
 
-
-
-
-// Dropping goals into bins
-
-// $('.main-bins').mouseover(function (e){
-// 	$(this).addClass('big-circle').removeClass('small-circle');
-// }).mouseout(function (e) {
-// 	$(this).addClass('small-circle').removeClass('big-circle');
-// })
 
 
 
