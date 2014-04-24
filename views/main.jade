@@ -3,7 +3,7 @@ extends layout
 block content
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
-		//- input#test(type="file", onchange="loadImageFile(this)")
+		input#test(type="file", onchange="loadImageFile(this)")
 		div.main-bins
 			h4.main-bin-headers Complete
 			div#main-complete-bin.circle.main-bin-circles.small-circle
@@ -32,7 +32,6 @@ block content
 				p.goal_list #{item}
 		div#search-container
 			input#searchbox
-			div#search-results
 		div#main-create-goal-form
 			form.form-signin#main-edit-form(role="form" method="POST" action="/goal")
 				h2.form-signin-heading Create a new goal
