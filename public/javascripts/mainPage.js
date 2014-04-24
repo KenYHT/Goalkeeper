@@ -1,5 +1,7 @@
 $(document).ready(function() {
-	$("#main-goal-deadline").datepicker();
+	$("#main-goal-deadline").datepicker(function(){
+		console.log("asdfasdfasdf");
+	});
 
 	var navToggle = false;
 	$("#main-nav-toggle-container").click(function() {

@@ -21,16 +21,19 @@ a {
 	padding-bottom: .5%;
 }
 
-#error_message{
-	/* display: none; */
+#error_message {
 	color: white;
 	font-size: 14px;
 	text-align: center;
 	vertical-align: middle;
 }
 
-#error_break{
-	display:none;
+#error_break {
+	display: none;
+}
+
+.float-left {
+	float: left;
 }
 
 .white {
@@ -78,4 +81,8 @@ a {
 
 .bold {
 	font-weight: bold;
+}
+
+.ui-datepicker {
+	z-index: 1000 !important;
 }
