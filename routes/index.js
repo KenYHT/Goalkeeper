@@ -13,7 +13,7 @@ exports.index = function(req, res){
 					res.send("Error: " + err);
 				else {
 					console.log(data);
-					res.render('main', { goals: data }); // render the main page with the users goals
+					res.render('main', { goals: data, user: req.session.user }); // render the main page with the users goals
 				}
 			}
 		);

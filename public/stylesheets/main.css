@@ -1,3 +1,13 @@
+#welcome-sign{
+	position: fixed;
+	left: 40px;
+	bottom: 100px;
+	padding: 20px;
+	z-index: 1001;
+	opacity: 0.9;
+	background-color: whitesmoke;
+}
+
 #main-container {
 	overflow: hidden;
 	position: relative;

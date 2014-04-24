@@ -23,6 +23,10 @@ $(document).ready(function() {
 			});
 		}
 	});
+
+	setTimeout(function(){
+		$('#welcome-sign').fadeOut();
+	}, 700);
 });
 
 $(switchBackground);

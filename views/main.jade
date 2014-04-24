@@ -3,6 +3,7 @@ extends layout
 block content
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
+		h1#welcome-sign Welcome, #{user}!
 		input#test(type="file", onchange="loadImageFile(this)")
 		div.main-bins
 			h4.main-bin-headers Complete
