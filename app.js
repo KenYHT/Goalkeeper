@@ -6,7 +6,8 @@ require('./models/goal-model');
 
 var express = require('express');
 var routes = require('./routes');
-var mainPage = require('./routes/main')
+var mainPage = require('./routes/main');
+var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 
@@ -32,9 +33,9 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.post('/register', routes.register);
-app.post('/login', routes.login);
-app.get('/logout', routes.logout);
+app.post('/register', user.register);
+app.post('/login', user.login);
+app.get('/logout', user.logout);
 app.get('/main', mainPage.index);
 app.post('/goal', mainPage.saveGoal);
 
