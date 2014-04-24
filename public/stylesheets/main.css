@@ -12,6 +12,10 @@
 	height: 100%;
 }
 
+.goal_list{
+	display:none;
+}
+
 .main-toolbar-container {
 	display: table;
 	position: absolute;
