@@ -27,6 +27,8 @@ block content
 				li.main-list-item
 					a.main-nav-item.main-sort-item#sort-priority Priority
 		div#main-goals-container
+			each item in goals
+				p#goal_list #{item}
 		div#search-container
 			input#searchbox
 		div#main-create-goal-form

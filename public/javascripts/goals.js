@@ -39,6 +39,19 @@ $('#main-create-button').click(function(e){
 	}
 });
 
+var container_text = $('#main-goals-container').text();
+
+container_text=container_text.replace("_id: ",'"id": "')
+							.replace("description",'"description"')
+							.replace("title",'"title"')
+							.replace("user",'"user"')
+							.replace("tags",'"tags"')
+							.replace(/'/g, "\"");
+container_text=container_text.replace(",",'",');
+console.log(container_text);
+var goals = JSON.parse(container_text);
+console.log(goals);
+
 
 // Click Goal -> Focus on Title
 $('#main-goals-container').on('click', '.main-goal-bubble', function (e) {
