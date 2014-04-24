@@ -203,6 +203,10 @@ $('#main-edit-form').submit(function(e){
 
 // Close Edit Form
 $('#main-close-form').click(function(){
+	// update title
+	$('.goal-title', UI.currGoal).text(UI.currGoal.master.title);
+
+
 	$('.goal-body', UI.currGoal).show();
 	UI.currGoal.master.shrink(window.innerWidth*2);
 	UI.currGoal = null;
