@@ -31,6 +31,7 @@ block content
 				p.goal_list #{item}
 		div#search-container
 			input#searchbox
+			div#search-results
 		div#main-create-goal-form
 			form.form-signin#main-edit-form(role="form" method="POST" action="/goal")
 				h2.form-signin-heading Create a new goal
@@ -40,7 +41,24 @@ block content
 					dt#main-deadline-label
 						label(for="goal-deadline") When do you need it done?
 					dd
-						input#main-goal-deadline.form-control(name="deadline")
+						div.input-group
+							input#main-goal-deadline.form-control.float-left(name="deadline", placeholder="mm/dd/yyyy")
+							select.form-control.float-left.main-deadline-dropdown.input-small
+								option 1:00
+								option 2:00
+								option 3:00
+								option 4:00
+								option 5:00
+								option 6:00
+								option 7:00
+								option 8:00
+								option 9:00
+								option 10:00
+								option 11:00
+								option 12:00
+							select.form-control.float-left.main-deadline-dropdown
+								option AM
+								option PM
 				input.form-control#tag-input(type="text", name="tags", placeholder="exercise, social, long-term")
 				div#goal-tags
 				button.btn.btn-primary.btn-block#save-goal-button(type="submit") Save goal

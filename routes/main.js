@@ -22,13 +22,12 @@ exports.saveGoal = function (req, res) {
 			goalTags[i] = validator.escape(goalTags[i]);
 	}
 
-	Goal.findOneAndUpdate({ user: req.session.user, title: goalName },
-		{ title: goalName, user : req.session.user, description: goalDescription, deadline: goalDeadline, tags: goalTags },
+	Goal.findOneAndUpdate({ user: req.session.user, title: goalName }, // find the goal with the user and goal title
+		{ title: goalName, user : req.session.user, description: goalDescription, deadline: goalDeadline, tags: goalTags }, // save all the respective information
 		{ upsert: true },
 		function (err, goal) {
-			if (err){
+			if (err)
 				res.send({ status: "Error", message: err });
-			}
 
 			res.send({ status: "OK", message: "Saved." });
 		}

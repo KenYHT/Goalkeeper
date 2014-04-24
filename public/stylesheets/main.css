@@ -173,7 +173,7 @@
 }
 
 #main-goal-deadline {
-	width: 80%;
+	width: 110px;
 }
 
 #goal-tags {
@@ -325,4 +325,9 @@
 #main-sort-container {
 	bottom: 20px;
 	left: 150px;
+}
+
+.main-deadline-dropdown {
+	margin-left: 10px;
+	width: 100px !important;
 }
