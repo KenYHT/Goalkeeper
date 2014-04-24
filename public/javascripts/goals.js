@@ -3,34 +3,11 @@
 // Create Goal Button
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
-		var marginX = UI.marginX + UI.dotRadius, marginY = UI.marginY + UI.dotRadius;
-		var x = Math.floor(Math.random()*(window.innerWidth - 2*marginX) + marginX);
-		var y = Math.floor(Math.random()*(window.innerHeight - 2*marginY) + marginY);
-		var d = new UI.Dot(x, y, UI.dotRadius);		// undefined, undefined for random spawn
-		d.appear();
-		d.el.className = "main-goal-bubble";
-
-		var body = document.createElement('span');
-		body.className = "goal-body";
-
-		var title = document.createElement('span');
-		title.className = "goal-title";
-		title.textContent = "Do: ";
-		title.contentEditable = "true";
-
-		var edit = document.createElement('a');
-		edit.href = '#';
-		edit.className = 'goal-edit';
-		edit.textContent = 'edit';
-
-		body.appendChild(title);
-		body.appendChild(document.createElement('br'));
-		body.appendChild(edit);
-		d.el.appendChild(body);
-
+		var d = new UI.Dot(null, null, UI.dotRadius);		// undefined, undefined for random spawn
 		$('#main-goals-container').append(d.el);
-		title.focus();
-		UI.goals.push(d);
+		d.appear();
+
+		$(d.titleEl).focus();
 
 		// SHOULD ?
 		d.el.dx = Math.random()*1 - 0.5;
@@ -80,23 +57,29 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 
 // Interactive tags
 $('#tag-input').keyup(function (e) {
-	console.log(10)
 	if (e.keyCode == 13){
-		console.log(1)
-		var box = $('#goal-tags')[0];
-		var newTag = "<span class='tag'>"+box.value+"</span>";
+		var box = $('#tag-input')[0];
+		var newTag = "<span class='tag'>"+box.value+" <span class='close-tag'>&times;</span></span>";
 		console.log(newTag)
 		$('#goal-tags').append(newTag);
 		box.value = "";
 
-		e.preventDefault();			// prevent form submission/allow multi word tags
 	}
+});
+
+$('#goal-tags').on('click', '.close-tag', function() {
+
 });
 
 
 // Edit Form Save Button
 $('#main-edit-form').submit(function(e){
 	e.preventDefault();
+
+	// don't submit if we're adding tags
+	if (document.activeElement == document.getElementById('tag-input')){
+		return;
+	}
 
 	var t = $('#goal-edit-title').val();
 	var d = $('#main-goal-description').val();

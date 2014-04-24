@@ -172,7 +172,17 @@
 	width: 80%;
 }
 
-.tag{
+#goal-tags {
+	margin-top: 10px
+}
+
+.close-tag{
+	border-left: 1px solid white;
+	margin-left: 5px;
+	padding: 3px;
+}
+
+.tag {
 	background-color: dimgray;
 	color: white;
 	padding: 5px;
