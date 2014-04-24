@@ -5,7 +5,7 @@ exports.index = function(req, res) {
 
 
 var ObjectId = require('mongoose').Types.ObjectId;
-var Goal = require('./../goal-model.js').Goal;
+var Goal = require('./../models/goal-model.js').Goal;
 var validator = require('validator');
 
 

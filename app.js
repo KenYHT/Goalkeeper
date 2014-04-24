@@ -1,9 +1,8 @@
-
 /**
  * Module dependencies.
  */
-require('./user-model');
-require('./goal-model');
+require('./models/user-model');
+require('./models/goal-model');
 
 var express = require('express');
 var routes = require('./routes');
@@ -20,16 +19,10 @@ app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
+app.use(express.cookieParser('glacial temple'));
+app.use(express.cookieSession());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('shhhhhh'));
-app.use(express.cookieSession())
-// app.use(express.session({ store : new RedisStore,
-// 						  secret : 'shhhhhh',
-// 						  cookie : {
-// 						  	maxAge : 24 * 60 * 60 * 1000
-// 						  }
-// 						}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
