@@ -269,13 +269,52 @@ UI.Box = (function(){
 	Dot Constructor
 		x, y, radius
 */
-UI.Dot = function(x, y, radius){
+UI.Dot = function(x, y, radius, data){
+	data = data || {};
 	var radius = parseInt(radius, 10) || 30;
+	var marginX = UI.marginX + UI.dotRadius, marginY = UI.marginY + UI.dotRadius;
+	if (x == null){
+		x = Math.floor(Math.random()*(window.innerWidth - 2*marginX) + marginX);
+	}
+	if (y == null){
+		y = Math.floor(Math.random()*(window.innerHeight - 2*marginY) + marginY);
+	}
 
 	var dot = UI.Box(x, y, radius);
 	this.el = dot.el;
 	this.el.master = this;
 	$(this.el).css({'border-radius': '50%'});
+
+	this.el.className = "main-goal-bubble";
+
+	var body = document.createElement('span');
+	body.className = "goal-body";
+
+	var title = document.createElement('span');
+	title.className = "goal-title";
+	title.textContent = data['title'] || "Do: ";
+	title.contentEditable = "true";
+	this.titleEl = title;
+
+	var edit = document.createElement('a');
+	edit.href = '#';
+	edit.className = 'goal-edit';
+	edit.textContent = 'edit';
+
+	body.appendChild(title);
+	body.appendChild(document.createElement('br'));
+	body.appendChild(edit);
+	this.el.appendChild(body);
+
+	// load data
+	this.title = data['title'];
+	this.description = data['description'];
+	this.date = data['date'];
+	this.priority = data['priority'];
+	this.tags = data['tags'];
+
+	// Add to UI goals array
+	UI.goals.push(this);
 
 	return this;
 };
