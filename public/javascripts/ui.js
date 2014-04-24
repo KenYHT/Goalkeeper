@@ -1,4 +1,36 @@
 /*
+ * This file describes the user interface for Goalkeeper
+ * The 'UI' namespace holds a set of options for configuring the frontend
+ */
+var UI = UI || {
+	searching: false,		// is the search window open?
+	currGoal : null,		// goal when editing, null when not editing
+	selectedGoal : null,	// when dragging
+	binRadius : 20000,		// detection radius for dropping goals into bins
+	dotRadius : 30,			// default dot size
+	smallDotRadius: 20,		// size when hovering over bin
+	hoverGrowth: 60,		// growth in px when hovering over a goal
+	friction : 0.95,		// friction for moving goals
+	dragging : false,
+	lastPageX : null,
+	lastPageY : null,
+	dx : 0,
+	dy : 0,
+	vScale : 5,				// amplify velocity, 0-no momentum
+	lastUpdate : -1,		// used to calculate time
+	goals: [],
+	hoverComplete: false,
+	hoverDelete: false,
+	marginX: 170,			// goals will spawn within window margins
+	marginY: 80,
+	rowMax: 8,				// max # of goals in a row
+	colMax: 5,				// max # of goals in a col
+};
+
+
+
+
+/*
  *	Shape Object Classes
  *		Box, Dot
  */
@@ -79,13 +111,13 @@ UI.Box = (function(){
 			$(this.el).css({
 				'width': UI.smallDotRadius*2,
 				'height': UI.smallDotRadius*2,
-				// 'line-height': UI.smallDotRadius*2,
+				'line-height': UI.smallDotRadius*2+'px',
 			});
 		} else {
 			$(this.el).css({
 				'width': UI.dotRadius*2,
 				'height': UI.dotRadius*2,
-				// 'line-height': UI.dotRadius*2,
+				'line-height': UI.dotRadius*2+'px',
 			});
 		}
 	}
