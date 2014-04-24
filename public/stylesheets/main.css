@@ -106,10 +106,15 @@
 	display: none;
 	position: absolute;
 	top: 0px;
+	left: 15%;
 	margin-top: 30px;
 	padding: 20px;
-	width: 50%;
+	width: 70%;
 	z-index: 5;
+}
+
+#main-edit-form{
+	width: 70%;
 }
 
 #main-edit-form > textarea{
@@ -165,6 +170,17 @@
 
 #main-goal-deadline {
 	width: 80%;
+}
+
+.tag{
+	background-color: dimgray;
+	color: white;
+	padding: 5px;
+	margin-right: 2px;
+}
+
+#save-goal-button {
+	margin-top: 20px;
 }
 
 .main-bins {

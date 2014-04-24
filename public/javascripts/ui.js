@@ -27,6 +27,25 @@ var UI = UI || {
 	colMax: 5,				// max # of goals in a col
 };
 
+// Sources: http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser/4238971#4238971
+UI.placeCaretAtEnd = function (el) {
+	el.focus();
+	if (typeof window.getSelection != "undefined"
+			&& typeof document.createRange != "undefined") {
+		var range = document.createRange();
+		range.selectNodeContents(el);
+		range.collapse(false);
+		var sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
+	} else if (typeof document.body.createTextRange != "undefined") {
+		var textRange = document.body.createTextRange();
+		textRange.moveToElementText(el);
+		textRange.collapse(false);
+		textRange.select();
+	}
+}
+
 
 
 
@@ -100,9 +119,9 @@ UI.Box = (function(){
 	_proto.updateSize = function(){
 		var diff = parseInt(this.el.style.width, 10) - UI.dotRadius*2;
 		if (this.big){
-			this.grow(UI.hoverGrowth-diff, 2000);
+			this.grow(UI.hoverGrowth-diff, 200);
 		} else {
-			this.shrink(diff, 02000);
+			this.shrink(diff, 0);
 		}
 	}
 
@@ -112,12 +131,16 @@ UI.Box = (function(){
 				'width': UI.smallDotRadius*2,
 				'height': UI.smallDotRadius*2,
 				'line-height': UI.smallDotRadius*2+'px',
+				'top': this.el.y - UI.smallDotRadius,
+				'left': this.el.x - UI.smallDotRadius,
 			});
 		} else {
 			$(this.el).css({
 				'width': UI.dotRadius*2,
 				'height': UI.dotRadius*2,
 				'line-height': UI.dotRadius*2+'px',
+				'top': this.el.y - UI.dotRadius,
+				'left': this.el.x - UI.dotRadius,
 			});
 		}
 	}

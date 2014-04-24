@@ -1,3 +1,5 @@
+
+
 // Create Goal Button
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
@@ -54,7 +56,14 @@ $('#main-goals-container').on('keyup', '.goal-title', function(){
 // Edit Goal Button
 $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
+	console.log(el, el.master.deleted)
+	if (el.master === undefined || el.master.deleted){
+		return;
+	}
+
 	el.master.gliding = false;
+	el.dx = el.dy = 0;
+	$(el).stop();
 	el.master.grow(window.innerWidth*2);
 	$('.goal-body', el).hide();
 	$('.main-goal-bubble').removeClass('high');
@@ -66,6 +75,22 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	$('#main-goal-deadline').val(el.master.deadline);
 
 	UI.currGoal = el;
+});
+
+
+// Interactive tags
+$('#tag-input').keyup(function (e) {
+	console.log(10)
+	if (e.keyCode == 13){
+		console.log(1)
+		var box = $('#goal-tags')[0];
+		var newTag = "<span class='tag'>"+box.value+"</span>";
+		console.log(newTag)
+		$('#goal-tags').append(newTag);
+		box.value = "";
+
+		e.preventDefault();			// prevent form submission/allow multi word tags
+	}
 });
 
 
@@ -137,7 +162,6 @@ $('#main-close-form').click(function(){
 
 // Hover over goal
 $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
-	console.log("OVER")
 	$('.main-goal-bubble').not(this)
 		.each(function(i, element){
 			element.master.resetSize();
@@ -150,23 +174,20 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 		el.master.updateSize();
 	}
 }).on('mouseover', '.main-goal-bubble > *', function(e){
-	console.log("OVER EDIT")
 	var el = $(this).parent().finish()[0];
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
 	}
 }).on('mouseout', '.main-goal-bubble', function (e) {
-	console.log("OUT")
 	var el = $(this)[0];
 	if (e.toElement === el){	// don't capture when exiting to itself
 		return;
 	}
 	if (el.master.big === true && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = false;
-		// el.master.updateSize();
 		$(el).finish();
-		// el.master.draw();
+		el.master.updateSize();
 	}
 });
 
@@ -210,6 +231,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		// mark goal as complete
 		el.master.completed = true;
 		el.master.save();
+		UI.goals.splice(UI.goals.indexOf(el.master), 1);
 		return;
 	} else if (UI.hoverDelete){
 		el.master.shrink(el.width*2, undefined, function () {
@@ -219,6 +241,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		// mark for deletion
 		el.master.deleted = true;
 		el.master.save();
+		UI.goals.splice(UI.goals.indexOf(el.master), 1);
 		return;
 	}
 
@@ -302,7 +325,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 // Searching
 document.onkeyup = function (e){
 	// check for focus
-	if (UI.searching == false && UI.currGoal == null && UI.selectedGoal == null){
+	if (UI.searching == false && UI.currGoal == null && UI.selectedGoal == null && document.activeElement.className != "goal-title"){
 		UI.searching = true;
 		$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', 'blur(10px)');
 
@@ -330,9 +353,10 @@ $('.search-result').click(function(){
 
 // Sorting
 $('#sort-time').click(function () {
-	// normalize sizes
+	var goals = UI.goals.slice(0).sort(function(a, b){return 0.5-Math.random()});
+	var len = goals.length;
 
-	var goals = UI.goals, len = goals.length;
+	// normalize sizes
 	var dx = (window.innerWidth - 2*UI.marginX) / UI.rowMax;
 	var dy = (window.innerHeight - 2*UI.marginX) / UI.colMax + UI.dotRadius/2;
 	for (var i=0; i<len; i++){
@@ -340,7 +364,19 @@ $('#sort-time').click(function () {
 	}
 });
 $('#sort-priority').click(function () {
-	
+	var goals = UI.goals.slice(0).sort(function(a, b){
+		var ascore = a.el.r + 2*a.el.g + 3*a.el.b;
+		var bscore = b.el.r + 2*b.el.g + 3*b.el.b;
+		return ascore - bscore;
+	});
+	var len = goals.length;
+
+	// normalize sizes
+	var dx = (window.innerWidth - 2*UI.marginX) / UI.rowMax;
+	var dy = (window.innerHeight - 2*UI.marginX) / UI.colMax + UI.dotRadius/2;
+	for (var i=0; i<len; i++){
+		goals[i].moveTo(UI.marginX+(i % UI.rowMax)*dx, Math.floor(i / UI.rowMax)*dy+UI.marginY, true);
+	}
 });
 
 
