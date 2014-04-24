@@ -1,5 +1,3 @@
-
-
 // Create Goal Button
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
@@ -18,6 +16,40 @@ $('#main-create-button').click(function(e){
 
 var container_text = $('#main-goals-container').text();
 
+$(".goal_list").delay(100).each(function(index, element){
+	var container_text = $(this).text();
+
+	container_text=container_text.replace("_id: ",'"id": "')
+							.replace("description",'"description"')
+							.replace("title",'"title"')
+							.replace("user",'"user"')
+							.replace("tags",'"tags"')
+							.replace(/'/g, "\"");
+	container_text=container_text.replace(",",'",');
+	var goals = JSON.parse(container_text);
+	console.log(goals);
+
+	var d = new UI.Dot(null, null, UI.dotRadius, { // undefined, undefined for random spawn
+	'title': goals.title,
+	'description': goals.description,
+	'date': null,
+	'priority': null,
+	'tags': goals.tags 
+	});		
+	$('#main-goals-container').append(d.el);
+	d.appear();
+});
+
+/*var d = new UI.Dot(null, null, UI.dotRadius { // undefined, undefined for random spawn
+	'title': ,
+	'description': ,
+	'date': ,
+	'priority': ,
+	'tags':  
+	});		
+	$('#main-goals-container').append(d.el);
+	d.appear();
+
 container_text=container_text.replace("_id: ",'"id": "')
 							.replace("description",'"description"')
 							.replace("title",'"title"')
@@ -27,7 +59,7 @@ container_text=container_text.replace("_id: ",'"id": "')
 container_text=container_text.replace(",",'",');
 console.log(container_text);
 var goals = JSON.parse(container_text);
-console.log(goals);
+console.log(goals);*/
 
 
 // Click Goal -> Focus on Title
