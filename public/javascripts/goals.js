@@ -3,12 +3,13 @@
  * The 'UI' namespace holds a set of options for configuring the frontend
  */
 var UI = UI || {
-	newGoal : true,
+	searching: false,		// is the search window open?
 	currGoal : null,		// goal when editing, null when not editing
 	selectedGoal : null,	// when dragging
 	binRadius : 20000,		// detection radius for dropping goals into bins
-	dotRadius : 60,			// default dot size
-	smallDotRadius: 40,		// size when hovering over bin
+	dotRadius : 30,			// default dot size
+	smallDotRadius: 20,		// size when hovering over bin
+	hoverGrowth: 60,		// growth in px when hovering over a goal
 	friction : 0.95,		// friction for moving goals
 	dragging : false,
 	lastPageX : null,
@@ -20,9 +21,15 @@ var UI = UI || {
 	goals: [],
 	hoverComplete: false,
 	hoverDelete: false,
-	marginX: 100,			// goals will spawn within window margins
+	marginX: 170,			// goals will spawn within window margins
 	marginY: 80,
+	rowMax: 8,				// max # of goals in a row
+	colMax: 5,				// max # of goals in a col
 };
+
+
+
+
 
 // Create Goal Button
 $('#main-create-button').click(function(e){
@@ -82,6 +89,7 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	el.master.gliding = false;
 	el.master.grow(window.innerWidth*2);
+	$('.goal-body', el).hide();
 	$('.main-goal-bubble').removeClass('high');
 	$(el).addClass('high');
 	$('#main-create-goal-form').fadeIn();
@@ -152,6 +160,7 @@ $('#main-edit-form').submit(function(e){
 
 // Close Edit Form
 $('#main-close-form').click(function(){
+	$('.goal-body', UI.currGoal).show();
 	UI.currGoal.master.shrink(window.innerWidth*2);
 	UI.currGoal = null;
 	$(UI.currGoal).removeClass('high');
@@ -161,25 +170,36 @@ $('#main-close-form').click(function(){
 
 // Hover over goal
 $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
+	console.log("OVER")
+	$('.main-goal-bubble').not(this)
+		.each(function(i, element){
+			element.master.resetSize();
+		});
+
+
 	var el = $(this).finish()[0];
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
 	}
 }).on('mouseover', '.main-goal-bubble > *', function(e){
+	console.log("OVER EDIT")
 	var el = $(this).parent().finish()[0];
 	if (el.master.big === false && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = true;
 		el.master.updateSize();
 	}
 }).on('mouseout', '.main-goal-bubble', function (e) {
+	console.log("OUT")
 	var el = $(this)[0];
 	if (e.toElement === el){	// don't capture when exiting to itself
 		return;
 	}
 	if (el.master.big === true && el !== UI.currGoal && !(el.master.gliding || el.dragging)){
 		el.master.big = false;
-		el.master.updateSize();
+		// el.master.updateSize();
+		$(el).finish();
+		// el.master.resetSize();
 	}
 });
 
@@ -312,224 +332,53 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 });
 
 
+// Searching
+document.onkeyup = function (e){
+	// check for focus
+	if (UI.searching == false && UI.currGoal == null && UI.selectedGoal == null){
+		UI.searching = true;
+		$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', 'blur(10px)');
 
-
-
-/*
- *	Shape Object Classes
- *		Box, Dot
- */
-
-// Box Class
-
-UI.Box = (function(){
-
-	/*
-		Box Constructor
-			x, y - position
-		Optional:
-			3 - x, y, radius
-			4 - x, y, width, height
-	*/
-	function init(x, y){
-		var x, y, width, height;
-		var r, g, b;
-		var dx, dy;
-		this.gliding = false;
-		this.big = false;
-		this.completed = false;
-		this.deleted = false;
-
-		var el = this.el = document.createElement('div');
-		this.el.className = 'goal';
-		
-		el.master = this;		// retain reference to master object
-		
-		var radius = el.radius = arguments[2] || 70;
-
-		if (arguments.length === 3){
-			el.width = width = radius;
-			el.height = height = radius;
-		} else if (arguments.length > 3){
-			el.width = width = arguments[2];
-			el.height = height = arguments[3];
-		} else {
-			el.width = width = 80;
-			el.height = height = 60;
-		}
-
-		// attach velocities to element
-		el.dx = 0;
-		el.dy = 0;
-
-		// attach position to element
-		x = el.x = x || Math.floor(Math.random()*window.innerWidth-radius);
-		y = el.y = y || Math.floor(Math.random()*window.innerHeight-radius);
-
-		// initialize random color
-		el.r = r = Math.floor(Math.random()*155)+100;
-		el.g = g = Math.floor(Math.random()*155)+100;
-		el.b = b = Math.floor(Math.random()*155)+100;
-
-
-		return this;
+		$('#search-container').show();
+		$('#searchbox')
+			.val(String.fromCharCode(e.which))
+			.fadeIn()
+			.focus();
 	}
-
-	var _proto = init.prototype;
-
-	// save the goal internal data
-	_proto.save = function () {
-		
-	}
-
-	_proto.updateSize = function(){
-		var diff = parseInt(this.el.style.width, 10) - UI.dotRadius*2;
-		if (this.big){
-			this.grow(10-diff);
-		} else {
-			this.shrink(diff, 0);
-		}
-	}
-
-	_proto.resetSize = function(small){
-		if (small){
-			$(this.el).css({
-				'width': UI.smallDotRadius*2,
-				'height': UI.smallDotRadius*2,
-			});
-		} else {
-			$(this.el).css({
-				'width': UI.dotRadius*2,
-				'height': UI.dotRadius*2,
-			});
-		}
-	}
-
-	_proto.glide = function(){
-		this.gliding = true;
-		this._updateGlide();
-	}
-
-	_proto._updateGlide = function(){
-		var el = this.el;
-		this.moveTo(el.x + el.dx, el.y + el.dy);
-
-		// update & check
-		el.dx *= UI.friction;
-		el.dy *= UI.friction;
-
-		if (this.gliding && (Math.abs(el.dx) > 0.02 || Math.abs(el.dy) > 0.02)){
-			requestAnimationFrame(this._updateGlide.bind(this));
-		} else {
-			this.gliding = false;
-			UI.dx = UI.dy = 0;
-		}
-	}
-
-
-	_proto.moveTo = function (x, y) {
-		var el = this.el;
-		x = (x > window.innerWidth) ? 0 : (x < 0) ? window.innerWidth : x;
-		y = (y > window.innerHeight) ? 0 : (y < 0) ? window.innerHeight : y;
-
-		// update internals
-		el.x = x;
-		el.y = y;
-
-		$(el).css({
-			'left': el.x - el.radius,
-			'top': el.y - el.radius,
-		});
-		return this;
-	}
-
-	_proto.draw = function(){
-		var el = this.el;
-		$(el).css({
-			'position': 'absolute',
-			'left': el.x,
-			'top': el.y,
-			'line-height': 2*el.height+'px',
-			'width': el.radius*2,
-			'height': el.radius*2,
-			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
-		});
-		return this;
-	}
-
-	_proto.appear = function(){
-		var el = this.el;
-		$(el).css({
-			'position': 'absolute',
-			'left': el.x + el.width,
-			'top': el.y + el.height,
-			'line-height': 2*el.height+'px',
-			'width': 10,
-			'height': 10,
-			'background-color': 'rgb('+el.r+','+el.g+','+el.b+')'
-		}).animate({
-			'left': el.x,
-			'top': el.y,
-			'width': el.width*2,
-			'height': el.height*2,
-		});
-		return this;
-	}
-
-	_proto.grow = function(d, duration, cb){
-		d = (typeof d === 'undefined') ? 20 : d;
-		$(this.el).animate({
-			'left': '-='+(d/2),
-			'top': '-='+(d/2),
-			'width': '+='+d,
-			'height': '+='+d,
-		}, duration, function() {
-			if (cb){
-				cb();
-			}
-		});
-		this.el.radius += d;
-		return this;
-	}
-	_proto.shrink = function(d, duration, cb){
-		d = (typeof d === 'undefined') ? 20 : d;
-		$(this.el).animate({
-			'left': '+='+(d/2),
-			'top': '+='+(d/2),
-			'width': '-='+d,
-			'height': '-='+d,
-		}, duration, function() {
-			if (cb){
-				cb();
-			}
-		});
-		this.el.radius -= d;
-		return this;
-	}
-
-	// Makes Box the constructor
-	return init;
-
-})();
-
-
-
-// Dot Class
-/*
-	Dot Constructor
-		x, y, radius
-*/
-UI.Dot = function(x, y, radius){
-	var radius = parseInt(radius, 10) || 30;
-
-	var dot = UI.Box(x, y, radius);
-	this.el = dot.el;
-	this.el.master = this;
-	$(this.el).css({'border-radius': '50%'});
-
-	return this;
 };
-UI.Dot.prototype = new UI.Box;
+$('#main-goals-container').click(function(){
+	$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
+	$('#search-container, #searchbox').hide();
+	UI.searching = false;
+});
+$('.search-result').click(function(){
+	// open search result
+
+
+	$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
+	$('#search-container, #searchbox').hide();
+	UI.searching = false;
+});
+
+
+// Sorting
+$('#sort-time').click(function () {
+	// normalize sizes
+
+	var goals = UI.goals, len = goals.length;
+	var dx = (window.innerWidth - 2*UI.marginX) / UI.rowMax;
+	var dy = (window.innerHeight - 2*UI.marginX) / UI.colMax + UI.dotRadius/2;
+	for (var i=0; i<len; i++){
+		goals[i].moveTo(UI.marginX+(i % UI.rowMax)*dx, Math.floor(i / UI.rowMax)*dy+UI.marginY, true);
+	}
+});
+$('#sort-priority').click(function () {
+	
+});
+
+
+
+
 	
 
 
