@@ -328,7 +328,10 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	}
 	UI.selectedGoal = null;
 	UI.dx = UI.dy = 0;			// reset global velocity
-}).mousemove(function(e){
+})
+
+document.onmousemove = function(e){
+	console.log("mousemove")
 	var el = UI.selectedGoal;
 	if (UI.selectedGoal){
 		if (el.dragging){
@@ -375,7 +378,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 
 		}
 	}
-});
+};
 
 
 // Searching
