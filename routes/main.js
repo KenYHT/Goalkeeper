@@ -15,7 +15,7 @@ exports.saveGoal = function (req, res) {
 	var goalName = validator.escape(req.body.title);
 	var goalDescription = validator.escape(req.body.description);
 	var goalDeadline = validator.escape(req.body.deadline);
-	var goalTags = req.body.tags;
+	var goalTags = req.body.tags || [];
 
 	if (goalTags) {
 		for (var i = 0; i < goalTags.length; i++)
