@@ -160,6 +160,14 @@ $('#main-edit-form').submit(function(e){
         timeout : 3000
     });
 
+    console.log({
+        	'title': t,
+        	'description': d,
+        	'date': dl,
+			'priority': p,
+			'tags': tags,
+        })
+
 
 	function onSubmitError(err){
 		console.log("ERR", err);
@@ -241,6 +249,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		return;
 	}
 	UI.selectedGoal = el;
+	UI.hoverComplete = UI.hoverDelete = false;
 
 	if (el.master.big && !(el.dragging || el.master.gliding)){
 		$(el).finish();
