@@ -1,5 +1,4 @@
 
-
 // Create Goal Button
 $('#main-create-button').click(function(e){
 	if (!UI.dragging){
@@ -49,7 +48,7 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 
 	$('#goal-edit-title').val(el.master.title);
 	$('#main-goal-description').val(el.master.description);
-	$('#main-goal-deadline').val(el.master.deadline);
+	$('#main-goal-deadline').val(el.master.date);
 
 	UI.currGoal = el;
 });
@@ -68,7 +67,7 @@ $('#tag-input').keyup(function (e) {
 });
 
 $('#goal-tags').on('click', '.close-tag', function() {
-
+	$(this).parent().remove();
 });
 
 
@@ -84,10 +83,16 @@ $('#main-edit-form').submit(function(e){
 	var t = $('#goal-edit-title').val();
 	var d = $('#main-goal-description').val();
 	var dl = $('#main-goal-deadline').val();
+	var p = null;		// get priority later
+	var tags = $('.tag').text().split('×')
+		.filter(function(v){return v!==''})
+		.map(function(e){return e.trim()});
 
 	UI.currGoal.master.title = t;
 	UI.currGoal.master.description = d;
-	UI.currGoal.master.deadline = dl;
+	UI.currGoal.master.date = dl;
+	UI.currGoal.master.priority = p;
+	UI.currGoal.master.tags = tags;
 
 	$('#save-goal-button').attr('disabled', 'disabled');
 
@@ -95,7 +100,14 @@ $('#main-edit-form').submit(function(e){
 	$.ajax({
         url     : $(this).attr('action'),
         type    : $(this).attr('method'),
-        data    : $(this).serialize(),
+        dataType: 'json',
+        data    : {
+        	'title': t,
+        	'description': d,
+        	'date': dl,
+			'priority': p,
+			'tags': tags,
+        },
         success : onSubmitSuccess,
         error	: onSubmitError,
         timeout : 3000
