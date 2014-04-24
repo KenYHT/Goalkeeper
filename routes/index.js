@@ -3,8 +3,8 @@
  */
 
 exports.index = function(req, res){
-	if (req.session.email !== null)
-		res.render('main');
+	if (req.cookies.remember)
+		res.render('main');	
 	else
 		res.render('index', { title: 'Goalkeeper'});
 };
@@ -14,7 +14,7 @@ var User = mongoose.model('User');
 var validator = require('validator');
 
 exports.register = function (req, res){
-	var userEmail = validator.escape(req.body.email);
+	var userEmail = validator.escape(req.body.email); 
 	var userPassword = validator.escape(req.body.password);
 	var userVerifyPassword = validator.escape(req.body.verifyPassword);
 	var errors = validateRegistration(userEmail, userPassword, userVerifyPassword);
@@ -69,7 +69,8 @@ function validateRegistration(email, password, verifyPassword) {
 
 
 exports.login = function (req, res){
-	var cookieTime = 1000 * 60 * 24 * 30; // keep a cookie for 30 days
+	var cookieTime = 1000 * 60 * 60 * 24 * 30; // keep a cookie for 30 days
+	var minute = 1000 * 60; // keep a cookie for a minute
 	var userEmail = validator.escape(req.body.email);
 	var userPassword = validator.escape(req.body.password);
 
@@ -80,16 +81,14 @@ exports.login = function (req, res){
 
         // login was successful if we have a user
         if (user) {
-        	if (req.body.remember) {
-        		req.session.email = userEmail;
-        		// req.session.expires = new Date(Date.now() + cookieTime);
-        		// req.session.maxAge = cookieTime;
-        	} else {
-        	}
-            // handle login success
-            console.log('login success');
-            //res.redirect('/main');
-            res.send({redirect: '/main'});
+        	req.session.user = userEmail;
+
+        	if (req.body.remember)
+        		res.cookie('remember', 1, { maxAge : cookieTime }); // have the cookie last 30 days if the user wants to be remembered
+        	else
+        		res.cookie('remember', 1, { maxAge : minute }); // have the cookie last a minute if the user does not want to be remembered
+
+            res.redirect('/');
             return;
         }
 
@@ -100,11 +99,11 @@ exports.login = function (req, res){
             	res.send({err: "The username or password is incorrect."})
             	break;
             case reasons.PASSWORD_INCORRECT:
-            	res.send({err: "The username or password is incorrect."})
-                break;
+              	res.send({err: "The username or password is incorrect."})
+              	break;
             case reasons.MAX_ATTEMPTS:
             	res.send({err: "Max attempts reached."})
-                // send email or otherwise notify user that account is
+            	// send email or otherwise notify user that account is
                 // temporarily locked
                 break;
         }
@@ -112,12 +111,7 @@ exports.login = function (req, res){
 };
 
 exports.logout = function(req, res) {
-	req.session.email = null;
-	// req.session = null;
-	// req.session.destroy(function(err){res.redirect('/')});
-	// req.session.destroy(function(err) {
-	// 	res.redirect('/');
-	// });
-
+	res.clearCookie('remember'); // clear the cookie
+	req.session = null; // kill the session
 	res.redirect('/');
 }
