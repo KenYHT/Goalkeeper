@@ -307,7 +307,7 @@ UI.Dot = function(x, y, radius, data){
 	this.el.appendChild(body);
 
 	// load data
-	this.title = data['title'];
+	this.title = data['title'] || title.textContent;
 	this.description = data['description'];
 	this.date = data['date'];
 	this.priority = data['priority'];
