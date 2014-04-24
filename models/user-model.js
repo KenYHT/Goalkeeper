@@ -9,7 +9,8 @@ var UserSchema = new Schema({
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     loginAttempts: { type: Number, required: true, default: 0 },
-    lockUntil: { type: Number }
+    lockUntil: { type: Number },
+    background_image: { type: String }
 });
 
 UserSchema.virtual('isLocked').get(function() {
