@@ -382,7 +382,7 @@ document.onkeyup = function (e){
 		// update searching mode
 		if (UI.searching == false){
 			UI.searching = true;
-			$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', 'blur(10px)');
+			$('.main-goal-bubble, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', 'blur(10px)');
 
 			$('#search-container').show();
 			$('#searchbox')
@@ -390,24 +390,33 @@ document.onkeyup = function (e){
 				.fadeIn()
 				.focus();
 		}
+		$('.main-goal-bubble').css('-webkit-filter', 'blur(10px)');
 
 		var query = $('#searchbox').val();
 
 		var results = UI.goals.filter(function(goal){
-			return (goal.title.indexOf(query) !== -1)
-				|| (goal.description.indexOf(query) !== -1)
-				|| (goal.tags.indexOf(query) !== -1);
+			var good = (goal.title.indexOf(query) !== -1);
+			good = (goal.description) ? (good || (goal.description.indexOf(query) !== -1)) : good;
+			good = (goal.tags) ? (good || (goal.tags.indexOf(query) !== -1)) : good;
+			
+			return good;
 		}).map(function (goal) {
+			// unblur good results
+			$(goal.el).css('-webkit-filter', '');
 			return goal.title;
 		});
 
-		console.log(results);
+		// console.log(results);
+		var html = "";
+		for (var i=0; i<results.length; i++){
+			html += "<h3>"+results[i]+"</h3>";
+		}
 
-		$('#search-results').text(results);
+		$('#search-results').html(html);
 	}
 };
 $('#main-goals-container').click(function(){
-	$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
+	$('.main-goal-bubble, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
 	$('#search-container, #searchbox').hide();
 	UI.searching = false;
 });
@@ -415,7 +424,7 @@ $('.search-result').click(function(){
 	// open search result
 
 
-	$('#main-goals-container, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
+	$('.main-goal-bubble, .main-bins, #main-add-goal-container, #main-sort-container').css('-webkit-filter', '');
 	$('#search-container, #searchbox').hide();
 	UI.searching = false;
 });
