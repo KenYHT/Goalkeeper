@@ -17,7 +17,7 @@ $('#main-create-button').click(function(e){
 
 var container_text = $('#main-goals-container').text();
 
-$(".goal_list").delay(100).each(function(index, element){
+$(".goal_list").each(function(index, element){
 	var container_text = $(this).text();
 
 	container_text=container_text.replace("_id: ",'"id": "')
@@ -28,7 +28,6 @@ $(".goal_list").delay(100).each(function(index, element){
 							.replace(/'/g, "\"");
 	container_text=container_text.replace(",",'",');
 	var goals = JSON.parse(container_text);
-	console.log(goals);
 
 	var d = new UI.Dot(null, null, UI.dotRadius, { // undefined, undefined for random spawn
 	'title': goals.title,
@@ -37,8 +36,10 @@ $(".goal_list").delay(100).each(function(index, element){
 	'priority': null,
 	'tags': goals.tags 
 	});		
-	$('#main-goals-container').append(d.el);
-	d.appear();
+	setTimeout(function(){
+		$('#main-goals-container').append(d.el);
+		d.appear();
+	}, 75*index);
 });
 
 /*var d = new UI.Dot(null, null, UI.dotRadius { // undefined, undefined for random spawn
