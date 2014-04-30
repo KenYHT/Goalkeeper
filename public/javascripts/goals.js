@@ -78,7 +78,7 @@ $('#main-goals-container').on('keyup', '.goal-title', function(){
 
 
 // Edit Goal Button
-$('#main-goals-container').on('click', '.goal-edit', function (e) {
+$('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	console.log(el, el.master.deleted)
 	if (el.master === undefined || el.master.deleted){
@@ -98,10 +98,11 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	$('#main-goal-description').val(el.master.description);
 	$('#main-goal-deadline').val(el.master.date);
 	var tagHtml = "";
+	el.master.tags = el.master.tags || [];
 	el.master.tags.forEach(function(tag){
 		tagHtml += "<span class='tag'>"+tag+" <span class='close-tag'>&times;</span></span>";
 	});
-	$('#goal-tags').html(tagHtml);
+	$('#goal-tags').html("").html(tagHtml);
 
 	UI.currGoal = el;
 });
