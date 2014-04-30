@@ -116,6 +116,10 @@
 	width: 50%;
 }
 
+.search-result{
+	display:inline-block;
+}
+
 #main-create-goal-form {
 	display: none;
 	position: absolute;

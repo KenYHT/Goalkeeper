@@ -97,6 +97,11 @@ $('#main-goals-container').on('click', '.goal-edit', function (e) {
 	$('#goal-edit-title').val(el.master.title);
 	$('#main-goal-description').val(el.master.description);
 	$('#main-goal-deadline').val(el.master.date);
+	var tagHtml = "";
+	el.master.tags.forEach(function(tag){
+		tagHtml += "<span class='tag'>"+tag+" <span class='close-tag'>&times;</span></span>";
+	});
+	$('#goal-tags').html(tagHtml);
 
 	UI.currGoal = el;
 });
@@ -385,6 +390,10 @@ document.onmousemove = function(e){
 document.onkeyup = function (e){
 	// check for focus
 	if (UI.currGoal == null && UI.selectedGoal == null && document.activeElement.className != "goal-title"){
+		// return if not alphanumeric
+		if (! (new RegExp(/^[a-z0-9]+$/i)).test(String.fromCharCode(e.which))){
+			return;
+		}
 
 		// update searching mode
 		if (UI.searching == false){
@@ -416,7 +425,7 @@ document.onkeyup = function (e){
 		// console.log(results);
 		var html = "";
 		for (var i=0; i<results.length; i++){
-			html += "<h3>"+results[i]+"</h3>";
+			html += "<h3 class='search-result'>"+results[i]+"</h3><br>";
 		}
 
 		$('#search-results').html(html);
