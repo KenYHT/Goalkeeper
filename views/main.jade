@@ -1,6 +1,7 @@
 extends layout
 
 block content
+	audio#audio(src="images/HUGHGH.mp3")
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
 		h1#welcome-sign Welcome, #{user}!
@@ -20,7 +21,7 @@ block content
 				li.main-list-item
 					a.main-nav-item Settings
 		div#main-add-goal-container
-			button.btn.btn-default#main-create-button
+			button.btn.btn-default#main-create-button(value="PLAY", onclick="play()")
 				span.glyphicon.glyphicon-plus.bold Create
 		div#main-sort-container.main-toolbar-container.white Sort By
 			ul.main-list
