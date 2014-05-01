@@ -36,7 +36,7 @@ app.get('/', routes.index);
 app.post('/register', user.register);
 app.post('/login', user.login);
 app.get('/logout', user.logout);
-app.get('/main', mainPage.index);
+// app.get('/main', mainPage.index);
 app.post('/goal', mainPage.saveGoal);
 
 http.createServer(app).listen(app.get('port'), function(){

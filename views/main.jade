@@ -46,23 +46,23 @@ block content
 						label(for="goal-deadline") When do you need it done?
 					dd
 						div.input-group
-							input#main-goal-deadline.form-control.float-left(name="deadline", placeholder="mm/dd/yyyy")
-							select.form-control.float-left.main-deadline-dropdown.input-small
-								option 1:00
-								option 2:00
-								option 3:00
-								option 4:00
-								option 5:00
-								option 6:00
-								option 7:00
-								option 8:00
-								option 9:00
-								option 10:00
-								option 11:00
-								option 12:00
-							select.form-control.float-left.main-deadline-dropdown
-								option AM
-								option PM
+							input#main-goal-deadline.form-control.float-left(type="text", name="deadline", placeholder="mm/dd/yyyy")
+							select#main-goal-deadline-time.form-control.float-left.main-deadline-dropdown.input-small(name="time")
+								option(value="1:00") 1:00
+								option(value="2:00") 2:00
+								option(value="3:00") 3:00
+								option(value="4:00") 4:00
+								option(value="5:00") 5:00
+								option(value="6:00") 6:00
+								option(value="7:00") 7:00
+								option(value="8:00") 8:00
+								option(value="9:00") 9:00
+								option(value="10:00") 10:00
+								option(value="11:00") 11:00
+								option(value="12:00") 12:00
+							select#main-goal-time-of-day.form-control.float-left.main-deadline-dropdown(name="timeOfDay", form="main-edit-form")
+								option(value="AM") AM
+								option(value="PM") PM
 				input.form-control#tag-input(type="text", name="tags", placeholder="exercise, social, long-term")
 				div#goal-tags
 				button.btn.btn-primary.btn-block#save-goal-button(type="submit") Save goal

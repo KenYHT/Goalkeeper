@@ -14,28 +14,30 @@ $('#main-create-button').click(function(e){
 		d.glide();
 	}
 });
-
+	
 var container_text = $('#main-goals-container').text();
 
 $(".goal_list").each(function(index, element){
 	var container_text = $(this).text();
 
-	container_text=container_text.replace("_id: ",'"id": "')
-							.replace("description",'"description"')
-							.replace("title",'"title"')
-							.replace("user",'"user"')
-							.replace("tags",'"tags"')
+	container_text=container_text.replace(/_id:.*,/, "")
+							.replace("description", "'description'")
+							.replace("title", "'title'")
+							.replace("user", "'user'")
+							.replace("tags", "'tags'")
+							.replace("date: ", "'date': ")
 							.replace(/'/g, "\"");
-	container_text=container_text.replace(",",'",');
+	// container_text=container_text.replace(",",",");
+	console.log(container_text);
 	var goals = JSON.parse(container_text);
 
 	var d = new UI.Dot(null, null, UI.dotRadius, { // undefined, undefined for random spawn
 	'title': goals.title,
 	'description': goals.description,
-	'date': null,
+	'date': new Date(goals.date),
 	'priority': null,
 	'tags': goals.tags 
-	});		
+	});	
 	setTimeout(function(){
 		$('#main-goals-container').append(d.el);
 		d.appear();
@@ -76,6 +78,54 @@ $('#main-goals-container').on('keyup', '.goal-title', function(){
 	el.master.title = $(this).text();
 });
 
+/**
+* Gets a Date object, and returns the date in MM/DD/YYYY format.
+*/
+function beautifyDate(date) {
+	console.log(date);
+	var prettyDate = "";
+
+	if (date.getMonth() < 10)
+		prettyDate += "0" + (date.getMonth() + 1) + "/";
+	else
+		prettyDate += (date.getMonth() + 1) + "/";
+
+	if (date.getDate() < 10)
+		prettyDate += "0" + date.getDate() + "/";
+	else
+		prettyDate += date.getDate() + "/";
+
+	prettyDate += date.getFullYear();
+	return prettyDate;
+}
+
+/**
+* Parses a date object and returns a dictionary that contains a time string and the time of day.
+*/
+function parseMilitaryTime(date) {
+	var time = {};
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+
+	if (hours < 12) {
+		time['timeOfDay'] = "AM";
+	} else {
+		time['timeOfDay'] = "PM";
+		hours -= 12; // get the hours back into the 0-11 range
+	}
+
+	if (hours == 0)
+		time['time'] = 12 + ":";
+	else
+		time['time'] = hours + ":";
+
+	if (minutes < 10)
+		time['time'] += "0" + minutes;
+	else
+		time['time'] += minutes;
+
+	return time;
+}
 
 // Edit Goal Button
 $('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
@@ -96,7 +146,15 @@ $('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
 
 	$('#goal-edit-title').val(el.master.title);
 	$('#main-goal-description').val(el.master.description);
-	$('#main-goal-deadline').val(el.master.date);
+
+	if (!isNaN(el.master.date.getTime())) {
+		$('#main-goal-deadline').val(beautifyDate(el.master.date));
+		var time = parseMilitaryTime(el.master.date);
+		$('#main-goal-deadline-time').val(time['time']);
+		$('#main-goal-time-of-day').val(time['timeOfDay']);
+		console.log(time['timeOfDay']);
+	}
+
 	var tagHtml = "";
 	el.master.tags = el.master.tags || [];
 	el.master.tags.forEach(function(tag){
@@ -141,12 +199,16 @@ $('#main-edit-form').submit(function(e){
 	var tags = $('.tag').text().split('×')
 		.filter(function(v){return v!==''})
 		.map(function(e){return e.trim()});
+	var deadlineTime = $('#main-goal-deadline-time option:selected').val();
+	var deadlineTimeOfDay = $('#main-goal-time-of-day option:selected').val();
 
 	UI.currGoal.master.title = t;
 	UI.currGoal.master.description = d;
 	UI.currGoal.master.date = dl;
 	UI.currGoal.master.priority = p;
 	UI.currGoal.master.tags = tags;
+	UI.currGoal.master.time = deadlineTime;
+	UI.currGoal.master.timeOfDay = deadlineTimeOfDay;
 
 	$('#save-goal-button').attr('disabled', 'disabled');
 
@@ -161,6 +223,8 @@ $('#main-edit-form').submit(function(e){
         	'date': dl,
 			'priority': p,
 			'tags': tags,
+			'time': deadlineTime,
+			'timeOfDay': deadlineTimeOfDay
         },
         success : onSubmitSuccess,
         error	: onSubmitError,
@@ -173,6 +237,8 @@ $('#main-edit-form').submit(function(e){
         	'date': dl,
 			'priority': p,
 			'tags': tags,
+			'time': deadlineTime,
+			'timeOfDay': deadlineTimeOfDay
         })
 
 
