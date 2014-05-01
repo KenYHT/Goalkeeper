@@ -26,6 +26,7 @@ var UI = UI || {
 	rowMax: 8,				// max # of goals in a row
 	colMax: 5,				// max # of goals in a col
 	relaxedMode: false,		// is in relaxed mode?
+	sound: false, 			// is sound on?
 };
 
 // Sources: http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser/4238971#4238971

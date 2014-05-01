@@ -246,25 +246,6 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	}
 });
 
-function playSound(soundType){
-	if (soundType==="movement")
-	{
-		var file = "PSHEEW";
-	 	file += Math.floor(Math.random()*3);
-	}
-	else if (soundType==="completion")
-	{
-		var file = "completion"
-	}
-	else
-	{
-		var file = "deletion"
-	}
- 	console.log(file);
-    var audio = document.getElementById(file);
-    audio.play();
-}
-
 // Drag Testing
 $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	var el = $(this)[0];
