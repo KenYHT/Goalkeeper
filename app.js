@@ -38,6 +38,7 @@ app.post('/login', user.login);
 app.get('/logout', user.logout);
 app.get('/main', mainPage.index);
 app.post('/goal', mainPage.saveGoal);
+app.get('/publicGoals', routes.publicGoals);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
