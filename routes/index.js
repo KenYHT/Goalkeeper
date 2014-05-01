@@ -12,7 +12,6 @@ exports.index = function(req, res){
 				if (err)
 					res.send("Error: " + err);
 				else {
-					console.log(data);
 					res.render('main', { goals: data, user: req.session.user }); // render the main page with the users goals
 				}
 			}
