@@ -54,6 +54,9 @@ function loadImageFile(testEl) {
 
  function play(){
  	console.log("Play!");
-    var audio = document.getElementById("audio");
+ 	var file = "HUGHGH"
+ 	file += Math.floor(Math.random()*3);
+ 	console.log(file)
+    var audio = document.getElementById(file);
     audio.play();
 }

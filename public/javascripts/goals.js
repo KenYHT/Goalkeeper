@@ -78,7 +78,7 @@ $('#main-goals-container').on('keyup', '.goal-title', function(){
 
 
 // Edit Goal Button
-$('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
+$('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	console.log(el, el.master.deleted)
 	if (el.master === undefined || el.master.deleted){
@@ -97,12 +97,6 @@ $('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
 	$('#goal-edit-title').val(el.master.title);
 	$('#main-goal-description').val(el.master.description);
 	$('#main-goal-deadline').val(el.master.date);
-	var tagHtml = "";
-	el.master.tags = el.master.tags || [];
-	el.master.tags.forEach(function(tag){
-		tagHtml += "<span class='tag'>"+tag+" <span class='close-tag'>&times;</span></span>";
-	});
-	$('#goal-tags').html("").html(tagHtml);
 
 	UI.currGoal = el;
 });
@@ -252,6 +246,24 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	}
 });
 
+function playSound(soundType){
+	if (soundType==="movement")
+	{
+		var file = "PSHEEW";
+	 	file += Math.floor(Math.random()*3);
+	}
+	else if (soundType==="completion")
+	{
+		var file = "completion"
+	}
+	else
+	{
+		var file = "deletion"
+	}
+ 	console.log(file);
+    var audio = document.getElementById(file);
+    audio.play();
+}
 
 // Drag Testing
 $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
@@ -290,7 +302,8 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			el.remove();
 		});
 
-		// mark goal as complete
+		// mark goal as complete and play sound
+		playSound("completion");
 		el.master.completed = true;
 		el.master.save();
 		UI.goals.splice(UI.goals.indexOf(el.master), 1);
@@ -300,7 +313,8 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			el.remove();
 		});
 
-		// mark for deletion
+		// mark for deletion and play sound
+		playSound("deletion");
 		el.master.deleted = true;
 		el.master.save();
 		UI.goals.splice(UI.goals.indexOf(el.master), 1);
@@ -313,6 +327,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		el.dx = UI.dx * UI.vScale;
 		el.dy = UI.dy * UI.vScale;
 		el.master.glide();
+		playSound("movement");
 	}
 
 	// reset global velocity
@@ -330,6 +345,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			el.dx = UI.dx * UI.vScale;
 			el.dy = UI.dy * UI.vScale;
 			el.master.glide();
+			playSound("movement");
 		}
 	}
 	UI.selectedGoal = null;
@@ -391,10 +407,6 @@ document.onmousemove = function(e){
 document.onkeyup = function (e){
 	// check for focus
 	if (UI.currGoal == null && UI.selectedGoal == null && document.activeElement.className != "goal-title"){
-		// return if not alphanumeric
-		if (! (new RegExp(/^[a-z0-9]+$/i)).test(String.fromCharCode(e.which))){
-			return;
-		}
 
 		// update searching mode
 		if (UI.searching == false){
@@ -426,7 +438,7 @@ document.onkeyup = function (e){
 		// console.log(results);
 		var html = "";
 		for (var i=0; i<results.length; i++){
-			html += "<h3 class='search-result'>"+results[i]+"</h3><br>";
+			html += "<h3>"+results[i]+"</h3>";
 		}
 
 		$('#search-results').html(html);
@@ -473,25 +485,6 @@ $('#sort-priority').click(function () {
 	for (var i=0; i<len; i++){
 		goals[i].moveTo(UI.marginX+(i % UI.rowMax)*dx, Math.floor(i / UI.rowMax)*dy+UI.marginY, true);
 	}
-});
-$('#sort-relax').click(function () {
-	if (UI.relaxedMode === false){
-		UI.friction = 1.0;
-		for (var i = 0; i < UI.goals.length; i++) {
-			var g = UI.goals[i];
-			g.el.dx = Math.random()*2 - 1;
-			g.el.dy = Math.random()*2 - 1;
-			g.glide();
-		};
-	} else {
-		UI.friction = 0.95;
-		// for (var i = 0; i < UI.goals.length; i++) {
-		// 	var g = UI.goals[i];
-		// 	g.dx = 0;
-		// 	g.dy = 0;
-		// };
-	}
-	UI.relaxedMode = !UI.relaxedMode;
 });
 
 

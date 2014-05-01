@@ -1,7 +1,14 @@
 extends layout
 
 block content
-	audio#audio(src="images/HUGHGH.mp3")
+	audio#HUGHGH0(src="images/HUGHGH.mp3")
+	audio#HUGHGH1(src="images/HUGHGH1.mp3")
+	audio#HUGHGH2(src="images/HUGHGH2.mp3")
+	audio#PSHEEW0(src="images/PSHEEW0.mp3")
+	audio#PSHEEW1(src="images/PSHEEW1.mp3")
+	audio#PSHEEW2(src="images/PSHEEW2.mp3")
+	audio#completion(src="images/completion.mp3")
+	audio#deletion(src="images/deletion.mp3")
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
 		h1#welcome-sign Welcome, #{user}!
