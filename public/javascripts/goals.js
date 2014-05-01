@@ -128,7 +128,7 @@ function parseMilitaryTime(date) {
 }
 
 // Edit Goal Button
-$('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
+$('#main-goals-container').on('click', '.goal-edit', function (e) {
 	var el = $(this).parent().parent()[0];
 	console.log(el, el.master.deleted)
 	if (el.master === undefined || el.master.deleted){
@@ -147,6 +147,7 @@ $('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
 	$('#goal-edit-title').val(el.master.title);
 	$('#main-goal-description').val(el.master.description);
 
+	// only show the deadline date if it exists
 	if (!isNaN(el.master.date.getTime())) {
 		$('#main-goal-deadline').val(beautifyDate(el.master.date));
 		var time = parseMilitaryTime(el.master.date);
@@ -161,7 +162,6 @@ $('#main-goals-container').on('mousedown', '.goal-edit', function (e) {
 		tagHtml += "<span class='tag'>"+tag+" <span class='close-tag'>&times;</span></span>";
 	});
 	$('#goal-tags').html("").html(tagHtml);
-
 	UI.currGoal = el;
 });
 
@@ -318,7 +318,6 @@ $('#main-goals-container').on('mouseover', '.main-goal-bubble', function(e){
 	}
 });
 
-
 // Drag Testing
 $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 	var el = $(this)[0];
@@ -356,7 +355,8 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			el.remove();
 		});
 
-		// mark goal as complete
+		// mark goal as complete and play sound
+		playSound("completion");
 		el.master.completed = true;
 		el.master.save();
 		UI.goals.splice(UI.goals.indexOf(el.master), 1);
@@ -366,7 +366,8 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			el.remove();
 		});
 
-		// mark for deletion
+		// mark for deletion and play sound
+		playSound("deletion");
 		el.master.deleted = true;
 		el.master.save();
 		UI.goals.splice(UI.goals.indexOf(el.master), 1);
@@ -379,6 +380,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 		el.dx = UI.dx * UI.vScale;
 		el.dy = UI.dy * UI.vScale;
 		el.master.glide();
+		playSound("movement");
 	}
 
 	// reset global velocity
@@ -396,6 +398,7 @@ $('#main-goals-container').on('mousedown', '.main-goal-bubble', function(e){
 			el.dx = UI.dx * UI.vScale;
 			el.dy = UI.dy * UI.vScale;
 			el.master.glide();
+			playSound("movement");
 		}
 	}
 	UI.selectedGoal = null;
@@ -457,10 +460,6 @@ document.onmousemove = function(e){
 document.onkeyup = function (e){
 	// check for focus
 	if (UI.currGoal == null && UI.selectedGoal == null && document.activeElement.className != "goal-title"){
-		// return if not alphanumeric
-		if (! (new RegExp(/^[a-z0-9]+$/i)).test(String.fromCharCode(e.which))){
-			return;
-		}
 
 		// update searching mode
 		if (UI.searching == false){
@@ -492,7 +491,7 @@ document.onkeyup = function (e){
 		// console.log(results);
 		var html = "";
 		for (var i=0; i<results.length; i++){
-			html += "<h3 class='search-result'>"+results[i]+"</h3><br>";
+			html += "<h3>"+results[i]+"</h3>";
 		}
 
 		$('#search-results').html(html);
@@ -542,6 +541,7 @@ $('#sort-priority').click(function () {
 });
 $('#sort-relax').click(function () {
 	if (UI.relaxedMode === false){
+		playSound("relax");
 		UI.friction = 1.0;
 		for (var i = 0; i < UI.goals.length; i++) {
 			var g = UI.goals[i];
@@ -559,7 +559,9 @@ $('#sort-relax').click(function () {
 	}
 	UI.relaxedMode = !UI.relaxedMode;
 });
-
+$('#sort-party').click(function () {
+	(function(){function e(){y=document.getElementsByTagName('IMG')[Math.floor(Math.random()*document.getElementsByTagName('IMG').length)]||document.body;y.style.transition=y.style.webkitTransition='-webkit-transform 1s ease-out';y.style.MozTransition='-moz-transform 1s ease-out';y.style.transform=y.style.MozTransform=y.style.webkitTransform='scale('+(Math.random()*2+.5)+')';if(Math.random()>.9){document.body.style.webkitTransition=document.body.style.MozTransition=document.body.style.transition='background-color 2s ease-out';document.body.style.backgroundColor='rgb('+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+')'}if(Math.random()>.9){t.style.opacity=Math.random()*.3}}var t=document.createElement('div');t.style.position='fixed';t.style.width='100%';t.style.height='100%';t.style.top='0';t.style.opacity=0;t.style.zIndex='100';t.style.backgroundColor='yellow';t.style.transition=t.style.webkitTransition='opacity 1s ease-out';t.style.MozTransition='opacity 1s ease-out';document.body.appendChild(t);(function n(){e();console.log(1);setTimeout(function(){n()},20)})()})();
+});
 
 
 

@@ -1,10 +1,20 @@
 extends layout
 
 block content
+	audio#HUGHGH0(src="images/HUGHGH.mp3")
+	audio#HUGHGH1(src="images/HUGHGH1.mp3")
+	audio#HUGHGH2(src="images/HUGHGH2.mp3")
+	audio#PSHEEW0(src="images/PSHEEW0.mp3")
+	audio#PSHEEW1(src="images/PSHEEW1.mp3")
+	audio#PSHEEW2(src="images/PSHEEW2.mp3")
+	audio#completion(src="images/completion.mp3")
+	audio#deletion(src="images/deletion.mp3")
+	audio#openNavbar(src="images/openNavbar.mp3")
+	audio#closeNavbar(src="images/closeNavbar.mp3")
+	audio#relax(src="images/relax.mp3")
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
 		h1#welcome-sign Welcome, #{user}!
-		input#test(type="file", onchange="loadImageFile(this)")
 		div.main-bins
 			h4.main-bin-headers Complete
 			div#main-complete-bin.circle.main-bin-circles.small-circle
@@ -19,8 +29,12 @@ block content
 					a(href="/logout", tabindex="-1").main-nav-item Log Out
 				li.main-list-item
 					a.main-nav-item Settings
+				li.main-list-item
+					a(href="#", onclick="soundToggle()", tabindex="-1").main-nav-item Sound
+				li.main-list-item
+					input(type="file", onchange="loadImageFile(this)")
 		div#main-add-goal-container
-			button.btn.btn-default#main-create-button
+			button.btn.btn-default#main-create-button(value="PLAY", onclick="playSound('creation')")
 				span.glyphicon.glyphicon-plus.bold Create
 		div#main-sort-container.main-toolbar-container.white Sort By
 			ul.main-list
@@ -30,6 +44,8 @@ block content
 					a.main-nav-item.main-sort-item#sort-priority Priority
 				li.main-list-item
 					a.main-nav-item.main-sort-item#sort-relax Relax
+				li.main-list-item
+					a.main-nav-item.main-sort-item#sort-party Party
 		div#main-goals-container
 			each item in goals
 				p.goal_list #{item}

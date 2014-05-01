@@ -6,6 +6,7 @@ $(document).ready(function() {
 	var navToggle = false;
 	$("#main-nav-toggle-container").click(function() {
 		if (navToggle === false) {
+			playSound("openNavbar");
 			navToggle = true;
 			$(".main-toolbar-container").animate({
 				right: 0
@@ -14,9 +15,10 @@ $(document).ready(function() {
 				$("#main-nav-toggle").addClass("glyphicon-chevron-right");
 			});
 		} else {
+			playSound("closeNavbar");
 			navToggle = false;
 			$(".main-toolbar-container").animate({
-				right: "-220px"
+				right: "-280px"
 			}, 200, function() {
 				$("#main-nav-toggle").removeClass("glyphicon-chevron-right");
 				$("#main-nav-toggle").addClass("glyphicon-chevron-left");
@@ -50,4 +52,55 @@ function loadImageFile(testEl) {
   var oFile = testEl.files[0];
   if (!rFilter.test(oFile.type)) { alert("You must select a valid image file!"); return; }
   oFReader.readAsDataURL(oFile);
+}
+
+function soundToggle(){
+	UI.sound = !UI.sound;
+	var audio = document.getElementById("relax");
+	audio.pause();
+	console.log("toggle");
+
+}
+
+function playSound(soundType){
+	if (UI.sound===true)
+	{
+		if (soundType==="movement")
+		{
+			var file = "PSHEEW";
+		 	file += Math.floor(Math.random()*3);
+		}
+		else if (soundType==="completion")
+		{
+			var file = "completion"
+		}
+		else if (soundType==="deletion")
+		{
+			var file = "deletion"
+		}
+		else if (soundType==="openNavbar")
+		{
+			var file = "openNavbar"
+		}
+		else if (soundType==="closeNavbar")
+		{
+			var file = "closeNavbar"
+		}
+		else if(soundType==="relax")
+		{
+			var file = "relax"
+			var audio = document.getElementById(file);
+			audio.volume = .4;
+
+		}
+		else //soundType="creation"
+		{
+			var file = "HUGHGH"
+		 	file += Math.floor(Math.random()*3);
+		}
+	 	console.log(file);
+	    var audio = document.getElementById(file);
+	    console.log(audio.volume);
+	    audio.play();
+	}
 }
