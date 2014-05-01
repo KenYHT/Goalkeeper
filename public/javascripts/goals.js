@@ -469,6 +469,7 @@ $('#sort-priority').click(function () {
 });
 $('#sort-relax').click(function () {
 	if (UI.relaxedMode === false){
+		playSound("relax");
 		UI.friction = 1.0;
 		for (var i = 0; i < UI.goals.length; i++) {
 			var g = UI.goals[i];

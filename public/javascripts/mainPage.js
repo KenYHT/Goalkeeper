@@ -56,11 +56,14 @@ function loadImageFile(testEl) {
 
 function soundToggle(){
 	UI.sound = !UI.sound;
+	var audio = document.getElementById("relax");
+	audio.pause();
 	console.log("toggle");
+
 }
 
 function playSound(soundType){
-	if (UI.sound===false)
+	if (UI.sound===true)
 	{
 		if (soundType==="movement")
 		{
@@ -83,14 +86,21 @@ function playSound(soundType){
 		{
 			var file = "closeNavbar"
 		}
+		else if(soundType==="relax")
+		{
+			var file = "relax"
+			var audio = document.getElementById(file);
+			audio.volume = .4;
+
+		}
 		else //soundType="creation"
 		{
 			var file = "HUGHGH"
 		 	file += Math.floor(Math.random()*3);
-		    var audio = document.getElementById(file);
 		}
 	 	console.log(file);
 	    var audio = document.getElementById(file);
+	    console.log(audio.volume);
 	    audio.play();
 	}
 }

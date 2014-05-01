@@ -11,10 +11,10 @@ block content
 	audio#deletion(src="images/deletion.mp3")
 	audio#openNavbar(src="images/openNavbar.mp3")
 	audio#closeNavbar(src="images/closeNavbar.mp3")
+	audio#relax(src="images/relax.mp3")
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
 		h1#welcome-sign Welcome, #{user}!
-		input#test(type="file", onchange="loadImageFile(this)")
 		div.main-bins
 			h4.main-bin-headers Complete
 			div#main-complete-bin.circle.main-bin-circles.small-circle
@@ -31,6 +31,8 @@ block content
 					a.main-nav-item Settings
 				li.main-list-item
 					a(href="#", onclick="soundToggle()", tabindex="-1").main-nav-item Sound
+				li.main-list-item
+					input(type="file", onchange="loadImageFile(this)")
 		div#main-add-goal-container
 			button.btn.btn-default#main-create-button(value="PLAY", onclick="playSound('creation')")
 				span.glyphicon.glyphicon-plus.bold Create
