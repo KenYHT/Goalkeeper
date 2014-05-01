@@ -18,7 +18,7 @@ $(document).ready(function() {
 			playSound("closeNavbar");
 			navToggle = false;
 			$(".main-toolbar-container").animate({
-				right: "-280px"
+				right: "-370px"
 			}, 200, function() {
 				$("#main-nav-toggle").removeClass("glyphicon-chevron-right");
 				$("#main-nav-toggle").addClass("glyphicon-chevron-left");
@@ -31,18 +31,26 @@ $(document).ready(function() {
 	}, 700);
 });
 
-$(switchBackground);
+$(".selectBackground").click(function(){
+	console.log("backgrounds!");
+	$("#wallpaper-container").toggle();
+});
+
+$(".wallpaper-preview").click(function(){
+	var file = $(this).attr("src");
+	$('#main-container').css('background-image', 'url(' + file + ')');
+	localStorage['b'] = file;
+});
+
 var oFReader = new FileReader(),
     rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
 
-oFReader.onload = function(oFREvent) {
-    localStorage.setItem('b', oFREvent.target.result);
-    switchBackground();
-};
+switchBackground();
 
 function switchBackground() {
   var backgroundImage = localStorage.getItem('b');
   if (backgroundImage) {
+  	console.log("loading image");
     $('#main-container').css('background-image', 'url(' + backgroundImage + ')');    
   } 
 }
@@ -59,7 +67,6 @@ function soundToggle(){
 	var audio = document.getElementById("relax");
 	audio.pause();
 	console.log("toggle");
-
 }
 
 function playSound(soundType){

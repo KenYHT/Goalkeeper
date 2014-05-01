@@ -12,6 +12,31 @@ block content
 	audio#openNavbar(src="images/openNavbar.mp3")
 	audio#closeNavbar(src="images/closeNavbar.mp3")
 	audio#relax(src="images/relax.mp3")
+	div#wallpaper-container-sheet
+		div#wallpaper-container
+			table#wallpaper-table
+				tr
+					td 
+						img.wallpaper-preview(src="images/wallpaper1.jpg")
+					td 
+						img.wallpaper-preview(src="images/wallpaper2.jpg")
+					td  
+						img.wallpaper-preview(src="images/wallpaper3.jpg")
+				tr
+					td
+						img.wallpaper-preview(src="images/wallpaper4.jpg")
+					td 
+						img.wallpaper-preview(src="images/wallpaper5.jpg")
+					td 
+						img.wallpaper-preview(src="images/wallpaper1.jpg")
+				tr
+					td 
+						img.wallpaper-preview(src="images/wallpaper1.jpg")
+					td 
+						img.wallpaper-preview(src="images/wallpaper1.jpg")
+					td 
+						img.wallpaper-preview(src="images/wallpaper1.jpg")
+
 	div#main-container(ng-app='goalkeeperApp' ng-controller='MainController')
 		//- {{understand}}
 		h1#welcome-sign Welcome, #{user}!
@@ -31,8 +56,10 @@ block content
 					a.main-nav-item Settings
 				li.main-list-item
 					a(href="#", onclick="soundToggle()", tabindex="-1").main-nav-item Sound
+				//- li.main-list-item
+				//- 	input(type="file", onchange="loadImageFile(this)")
 				li.main-list-item
-					input(type="file", onchange="loadImageFile(this)")
+					a.selectBackground(href="#") Backgrounds
 		div#main-add-goal-container
 			button.btn.btn-default#main-create-button(value="PLAY", onclick="playSound('creation')")
 				span.glyphicon.glyphicon-plus.bold Create
