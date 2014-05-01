@@ -21,3 +21,16 @@ exports.index = function(req, res){
 	else
 		res.render('index', { title: 'Goalkeeper'});
 };
+
+exports.publicGoals = function(req, res){
+	var username = req.query.user;
+	Goal.find({ user: username }, 
+		function(err, data) {
+			if (err)
+				res.send("Error: " + err);
+			else {
+				res.send({ goals: data, user: username }); // render the main page with the users goals
+			}
+		}
+	);
+};
