@@ -51,3 +51,9 @@ function loadImageFile(testEl) {
   if (!rFilter.test(oFile.type)) { alert("You must select a valid image file!"); return; }
   oFReader.readAsDataURL(oFile);
 }
+
+ function play(){
+ 	console.log("Play!");
+    var audio = document.getElementById("audio");
+    audio.play();
+}
